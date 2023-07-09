@@ -55,18 +55,6 @@ while True:
         print("UUCMS   Name           Gender  Course   Sem     Fees")
         print(z)
         f.close()
-    # SIR DD CODE
-    # f=open("students.csv","r")
-    # data=f.read()
-    # lines=data.split("\n")
-    # lines=lines[0:len(lines)-1]   
-    # 
-    # print("UUCMSNO\tName\tGender\tCourse\tSem\tFees")
-    # for l in lines:
-    #     s=l.split(",")
-    #     print(f"{s[0]}\t{s[1]}\t{s[2]}\t{s[3]}\t{s[4]}\t{s[5]}")
-    # f.close()
-    # print(lines)
 
     elif choice==3:
         f=open("students.csv","r")
@@ -398,4 +386,4 @@ while True:
         print("***************************Thank You For Using Our Services*********************************** ")
         break
 
-        
+                    
