@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <title>AK Shala Internship</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: url('static/back.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            transition: background 0.5s ease-in-out;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            text-align: center;
+            width: 300px;
+            border-radius: 10px;
+            animation: fadeIn 1s ease-in-out;
+        }
+        .hidden {
+            display: none;
+        }
+        input {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: transparent;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100px;
+            padding: 10px;
+            background: #4facfe;
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+        }
+        button:hover {
+            background: #00c6fb;
+            transform: scale(1.05);
+        }
+        .navbar {
+            display: none;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+            width: 100%;
+            position: fixed;
+            top: 0;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 10px 20px;
+            transition: 0.3s;
+        }
+        .navbar a:hover {
+            background: #4facfe;
+            border-radius: 5px;
+        }
+        .matches-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 200px;
+            width: 100%;
+       
+            background-size: 1000px;
+            background-attachment: fixed;
+            height: 700px;
+        }
+        .match {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 10px;
+            margin: 10px;
+            width: 500px;
+            text-align: center;
+            justify-content: space-between;
+            animation: slideIn 0.5s ease-in-out;
+        }
+        .match img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid #000;
+    object-fit: cover;
+    display:flex;
+    margin-left: 65px;
+
+    
+}
+
+.seat-button {
+    width: 100%;
+    padding: 10px;
+    background: #4facfe;
+    border: none;
+    color: white;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px 0;
+    transition: background 0.3s, transform 0.3s;
+}
+
+.seat-button:hover {
+    background: #00c6fb;
+    transform: scale(1.05);
+}
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="container" id="login-container">
+        <h2>Login</h2>
+        <form id="login-form" action="/signin" method="post">
+            <input type="email" id="login-name" placeholder="Email" name="email" required>
+            <input type="password" id="login-password" name="password" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+        <p>New user? <a href="#" id="show-register">Click here to sign up</a></p>
+        <p id="login-message" style="color: red;"></p>
+        
+    </div>
+
+    <div class="container hidden" id="register-container">
+        <h2>Register</h2>
+        <form id="register-form" action="/signup" method="post">
+            <input type="text" id="register-name" placeholder="Name" name="name" required>
+            <input type="email" id="register-password" placeholder="email" name="email" required>
+            <input type="number" id="register-name" placeholder="phone" name="phone" required>
+            <input type="password" id="register-password" name="password" placeholder="Password" required>
+            <button type="submit">Sign Up</button>
+        </form>
+        <p>Already registered? <a href="#" id="show-login">Go to Login</a></p>
+        
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById("show-register").addEventListener("click", function() {
+                document.getElementById("login-container").classList.add("hidden");
+                document.getElementById("register-container").classList.remove("hidden");
+                
+          
+            });
+
+            document.getElementById("show-login").addEventListener("click", function() {
+                document.getElementById("register-container").classList.add("hidden");
+                document.getElementById("login-container").classList.remove("hidden");
+            });
+});
+    </script>
+    <script>
+        if('{{msg}}'){
+            alert('{{msg}}');
+        }
+    </script>
+</body>
+</html>
+
