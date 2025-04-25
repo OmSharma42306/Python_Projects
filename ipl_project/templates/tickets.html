@@ -399,55 +399,65 @@
     { date: 'MAY, WED 21', time: '3:30 pm IST', team1: 'TBD', team1Img: 'https://upload.wikimedia.org/wikipedia/en/0/0e/Rajasthan_Royals_logo.png', team2: 'TBD', team2Img: 'https://upload.wikimedia.org/wikipedia/en/5/5e/Lucknow_Super_Giants_logo.png', venue: 'Hydarabad' },
     { date: 'MAY, FRI 23', time: '7:30 pm IST', team1: 'TBD', team1Img: 'https://upload.wikimedia.org/wikipedia/en/4/4e/Delhi_Capitals_logo.png', team2: 'TBD', team2Img: 'https://upload.wikimedia.org/wikipedia/en/1/1e/Kolkata_Knight_Riders_logo.png', venue: 'Kolkata' },
     { date: 'MAY, SUN 25', time: '7:30 pm IST', team1: 'TBD', team1Img: 'https://upload.wikimedia.org/wikipedia/en/f/f9/Chennai_Super_Kings_logo.png', team2: 'TBD', team2Img: 'https://upload.wikimedia.org/wikipedia/en/9/9f/Mumbai_Indians_logo.png', venue: 'Kolkata' },
+];
 
-        ];
+function displayMatches() {
+    const matchContainer = document.getElementById('matches-list');
+    matchContainer.innerHTML = '';
 
-        function displayMatches() {
-            const matchContainer = document.getElementById('matches-list');
-            matchContainer.innerHTML = '';
-            
-            matches.forEach(match => {
-                const matchElement = document.createElement('div');
-                matchElement.classList.add('match');
-                matchElement.innerHTML = `
-                    <div>
-                        <div class="match-date">${match.date} - ${match.time}</div> 
-                        
-                        <div class="match-teams">
-                            <img src="${match.team1Img}" alt="${match.team1}" /> 
-                            <span>${match.team1}</span> vs 
-                            <img src="${match.team2Img}" alt="${match.team2}" />
-                            <span>${match.team2}</span>
-                        </div>
-                        <div class="match-venue">Venue: ${match.venue}</div>
-                        
+    const monthMap = {
+        'JAN': 0, 'FEB': 1, 'MAR': 2, 'APR': 3,
+        'MAY': 4, 'JUN': 5, 'JUL': 6, 'AUG': 7,
+        'SEP': 8, 'OCT': 9, 'NOV': 10, 'DEC': 11
+    };
+
+    const today = new Date();
+    const endDate = new Date();
+    endDate.setDate(today.getDate() + 2);
+
+    matches.forEach(match => {
+        const [monthStr, , dayStr] = match.date.split(' ');
+        const month = monthMap[monthStr.replace(',', '')];
+        const day = parseInt(dayStr);
+        const matchDate = new Date(today.getFullYear(), month, day);
+
+        // Only include matches today or within the next 2 days
+        if (matchDate >= today && matchDate <= endDate) {
+            const matchElement = document.createElement('div');
+            matchElement.classList.add('match');
+            matchElement.innerHTML = `
+                <div>
+                    <div class="match-date">${match.date} - ${match.time}</div> 
+                    <div class="match-teams">
+                        <img src="${match.team1Img}" alt="${match.team1}" /> 
+                        <span>${match.team1}</span> vs 
+                        <img src="${match.team2Img}" alt="${match.team2}" />
+                        <span>${match.team2}</span>
                     </div>
-                    <div>
-                        <button class="book-now">Book Now</button>
-                        
+                    <div class="match-venue">Venue: ${match.venue}</div>
+                </div>
+                <div>
+                    <button class="book-now">Book Now</button>
+                </div>
+            `;
 
-
-                    </div>
-                `;
-                
-                document.getElementById("booking-container").classList.add("hidden");
-                document.getElementById("ticket-display").style.display = "none";
+            const bookNowButton = matchElement.querySelector('.book-now');
+            bookNowButton.addEventListener('click', function () {
                 document.getElementById("info").style.display = "none";
-                const bookNowButton = matchElement.querySelector('.book-now');
-bookNowButton.addEventListener('click', function() {
-    document.getElementById("info").style.display = "none";
-    document.getElementById("matches-section").style.display = "none";
-    document.getElementById("booking-container").classList.remove("hidden");
-    
-    // Fill in the booking form with match details
-    document.getElementById("booking-match-date").value = match.date;
-    document.getElementById("booking-match-time").value = match.time;
-    document.getElementById("booking-match-teams").value = `${match.team1} vs ${match.team2}`;
-    document.getElementById("booking-match-venue").value = match.venue;
-});
-                matchContainer.appendChild(matchElement);
+                document.getElementById("matches-section").style.display = "none";
+                document.getElementById("booking-container").classList.remove("hidden");
+
+                document.getElementById("booking-match-date").value = match.date;
+                document.getElementById("booking-match-time").value = match.time;
+                document.getElementById("booking-match-teams").value = `${match.team1} vs ${match.team2}`;
+                document.getElementById("booking-match-venue").value = match.venue;
             });
+
+            matchContainer.appendChild(matchElement);
         }
+    });
+}
+
     document.getElementById("navbar").style.display = "flex";
 
     // ✅ Ensure the background remains after login

@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 import sqlite3
-import telepot
 import time
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
 
