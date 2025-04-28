@@ -29,7 +29,7 @@ def admin_login():
 def admin_dashboard():
     if not session.get('admin_logged_in'):
         return redirect(url_for('admin_login'))
-    return render_template('admin_dashboard.html')
+    return render_template('tickets.html')
 
 @app.route('/logout')
 def logout():
@@ -43,6 +43,11 @@ def user_login():
 @app.route('/about')
 def about():
     return render_template('about.html')
+
+@app.route('/signup')
+def signup():
+    return render_template('signup.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
