@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -49,5 +49,63 @@
     </table>
 </div>
 
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <!-- Bootstrap 4 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body style="background-color: #000000;">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Admin Dashboard</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-5" style="color: white;">
+        <h2 class="text-center">View Tickets</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th style="color: white;">Ticket ID</th>
+                    <th style="color: white;">Ticket Name</th>
+                    <th style="color: white;">Match Date</th>
+                    <th style="color: white;">Match Time</th>
+                    <th style="color: white;">Match Teams</th>
+                    <th style="color: white;">Match Venue</th>
+                    <th style="color: white;">Seat Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ticket in tickets %}
+                <tr>
+                    <td style="color: white;">{{ ticket.ticket_id }}</td>
+                    <td style="color: white;">{{ ticket.ticket_name }}</td>
+                    <td style="color: white;">{{ ticket.match_date }}</td>
+                    <td style="color: white;">{{ ticket.match_time }}</td>
+                    <td style="color: white;">{{ ticket.match_teams }}</td>
+                    <td style="color: white;">{{ ticket.match_venue }}</td>
+                    <td style="color: white;">${{ ticket.seat_price }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

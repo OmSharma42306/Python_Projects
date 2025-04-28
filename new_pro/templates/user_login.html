@@ -4,21 +4,23 @@
 
 {% block content %}
 <div class="container">
-  <h2>User Login</h2>
+  <h2 style="color: white;">User Login</h2>
   {% if error %}
   <div class="alert alert-danger">{{ error }}</div>
   {% endif %}
-  <form method="post">
+  <form method="post" action="/user_login">
     <div class="mb-3">
-      <label class="form-label">Username</label>
-      <input type="text" class="form-control" name="username" required>
+      <label class="form-label" style="color: white;">Username</label>
+      <input type="text" class="form-control" name="email" required>
     </div>
     <div class="mb-3">
-      <label class="form-label">Password</label>
+      <label class="form-label" style="color: white;">Password</label>
       <input type="password" class="form-control" name="password" required>
     </div>
     <button type="submit" class="btn btn-primary">Login</button>
   </form>
+  <br>
+  
   <a  href="{{ url_for('signup') }}">SignUp</a>
 </div>
 {% endblock %}

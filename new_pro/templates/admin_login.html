@@ -4,17 +4,17 @@
 
 {% block content %}
 <div class="container">
-  <h2>Admin Login</h2>
+  <h2 style="color: white;">Admin Login</h2>
   {% if error %}
   <div class="alert alert-danger">{{ error }}</div>
   {% endif %}
   <form method="post">
     <div class="mb-3">
-      <label class="form-label">Username</label>
+      <label class="form-label" style="color: white;">Username</label>
       <input type="text" class="form-control" name="username" required>
     </div>
     <div class="mb-3">
-      <label class="form-label">Password</label>
+      <label class="form-label" style="color: white;">Password</label>
       <input type="password" class="form-control" name="password" required>
     </div>
     <button type="submit" class="btn btn-primary">Login</button>
