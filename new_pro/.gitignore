@@ -1,6 +1,0 @@
-
-client = razorpay.Client(auth=("rzp_test_xt0FlQyPwPEQZS", "bViBMXjdJjIYG9Fz9zGYF6nX"))
-razorpay_key = "bViBMXjdJjIYG9Fz9zGYF6nX"
-
-"bViBMXjdJjIYG9Fz9zGYF6nX"
-"rzp_test_xt0FlQyPwPEQZS"

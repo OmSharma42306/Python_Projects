@@ -176,41 +176,6 @@ def book_ticket():
     conn.close()
 
     return jsonify({'message': 'Ticket booked successfully!'})
-# @app.route('/create_order', methods=['POST'])
-# def create_razorpay_order():
-#     data = request.get_json()
-#     #amount = int(data['seat_price']) * 100  # in paise
-#     amount = int(data['amount']) * 100  # Convert to paise
-#     name = data['name']
-#     match_date = data['match_date']
-#     match_time = data['match_time']
-#     match_teams = data['match_teams']
-#     match_venue = data['match_venue']
-#     quantity = data.get('quantity', 1)
-
-#     # Save ticket temporarily if needed or just pass data for now
-
-#     order = client.order.create({
-#         'amount': amount,
-#         'currency': 'INR',
-#         'payment_capture': '1'
-#     })
-
-#     return {
-#         'order_id': order['id'],
-#         'amount': amount,
-#         'razorpay_key': razorpay_key,
-#         'ticket_info': {
-#             'name': name,
-#             'match_date': match_date,
-#             'match_time': match_time,
-#             'match_teams': match_teams,
-#             'match_venue': match_venue,
-#             'quantity': quantity
-#         }
-#     }
-
-
 
 
 @app.route('/buy_ticket/<int:ticket_id>', methods=['GET'])
@@ -251,9 +216,6 @@ def payment_success():
     data = request.get_json()
     user_id = session.get('user_id')
     ticket_id = data['ticket_id']
-
-    # You can verify signature here using:
-    # razorpay_client.utility.verify_payment_signature(...)
 
     # Save the booking
     conn = sqlite3.connect('tickets.db')
