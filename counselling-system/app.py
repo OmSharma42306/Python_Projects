@@ -98,18 +98,6 @@ def admin_dashboard():
 
     return render_template('admin_dashboard.html', students=students, counsellors=counsellors)
 
-@app.route('/view_bookings')
-def view_bookings():
-    return "Booking view under construction."
-
-
-
-# @app.route('/admin_dashboard')
-# def admin_dashboard():
-#     if not session.get('admin_logged_in'):
-#         return redirect(url_for('admin_login'))
-#     return render_template('admin_dashboard.html')
-
 
 @app.route('/student_messages')
 def student_messages():
@@ -122,10 +110,7 @@ def student_messages():
     cursor = conn.cursor()
 
     cursor.execute('SELECT id FROM users WHERE email = ?', (student_email,))
-    print("EMAIL: ",student_email)
     student = cursor.fetchone()
-
-    print("HHHHHHHHHHHHHHHHH",student)
     
     if student:
         student_id = student[0]
@@ -265,12 +250,6 @@ def reply_message(message_id):
     conn.close()
     return redirect(url_for('counsellor_dashboard'))
 
-@app.route('/book_session')
-def book_session():
-    return "<h2>Booking Page Coming Soon</h2>"
-
-
-
 
 @app.route('/about')
 def about():
@@ -326,9 +305,6 @@ def signup():
         return render_template('user_login.html', msg='Signup successful!')
 
     return render_template('signup.html')
-
-
-
 
 
 if __name__ == '__main__':
