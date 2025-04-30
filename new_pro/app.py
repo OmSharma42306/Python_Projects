@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, redirect, url_for, session,js
 import sqlite3
 import time
 import razorpay
+import smtplib
+from email.message import EmailMessage
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Needed for session management
 
@@ -103,9 +105,12 @@ def user_login():
         if email == "admin123@gmail.com" and password == "123456":
             return render_template('admin_dashboard.html')
         elif user:
+            print("Login Route",email)
+            session['user_email'] = email
             return render_template('tickets.html')
         else:
-            return render_template('index.html', msg='Invalid credentials!')
+            
+            return render_template('user_login.html', msg='Invalid credentials!')
     # return render_template('index.html')
     return render_template('user_login.html')
 
@@ -133,14 +138,57 @@ def signup():
     return render_template('signup.html')
     #return render_template('signup.html')
 
+# @app.route('/getticket')
+# def getticket():
+#     time.sleep(5)
+#     email = session.get('user_email')  # Retrieve email from session
+#     if not email:
+#         return "Email not found", 400
+
+#     msg = EmailMessage()
+#     msg['Subject'] = 'Your Match Ticket'
+#     msg['From'] = 'your_email@example.com'
+#     msg['To'] = email
+#     msg.set_content('Attached is your match ticket. Enjoy the game!')
+
+#     with open('C:/Users/Akash B N/Downloads/ticket.pdf', 'rb') as f:
+#         file_data = f.read()
+#         msg.add_attachment(file_data, maintype='application', subtype='pdf', filename='ticket.pdf')
+
+#     # Send the email (use your credentials or env vars for safety)
+#     with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+#         smtp.login('your_email@example.com', 'your_app_password')  # Use App Password if Gmail
+#         smtp.send_message(msg)
+
+#     return render_template('xyz.html', msg='Ticket sent to your email!')
+
 @app.route('/getticket')
 def getticket():
-    time.sleep(5)
-    # import telepot
-    # bot = telepot.Bot("7973668926:AAE4xaadr4YaB3LjL_pBw8vhHl2IFnE6FR4")
-    # chat_id = "5514657308"
-    # bot.sendDocument(chat_id, open('C:/Users/Akash B N/Downloads/ticket.pdf', 'rb'))
-    return render_template('xyz.html',msg='Ticket sent to your telegram!')
+    user_email = session.get('user_email')  # Make sure to store email earlier in session
+    if not user_email:
+        return "Email not found. Booking incomplete.", 400
+
+    msg = EmailMessage()
+    msg['Subject'] = 'Your Match Ticket'
+    msg['From'] = 'omsharma.83173@gmail.com'
+    msg['To'] = user_email
+    msg.set_content('Thanks for booking with us! Your ticket is attached.')
+
+    # Attach the PDF ticket
+    with open('ticket.pdf', 'rb') as f:
+        file_data = f.read()
+        msg.add_attachment(file_data, maintype='application', subtype='pdf', filename='ticket.pdf')
+
+    # Connect to Gmail SMTP and send the email
+    try:
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+            smtp.login('omsharma.83173@gmail.com', 'dkno aerq jxij ufur')  # Use app password
+            smtp.send_message(msg)
+        return render_template('xyz.html', msg='Ticket sent to your email!')
+    except Exception as e:
+        print("Error sending email:", e)
+        return render_template('xyz.html', msg='Failed to send email.')
+
 
 @app.route('/create_order', methods=['POST'])
 def create_order():
