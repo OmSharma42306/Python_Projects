@@ -122,7 +122,10 @@ def student_messages():
     cursor = conn.cursor()
 
     cursor.execute('SELECT id FROM users WHERE email = ?', (student_email,))
+    print("EMAIL: ",student_email)
     student = cursor.fetchone()
+
+    print("HHHHHHHHHHHHHHHHH",student)
     
     if student:
         student_id = student[0]
@@ -160,9 +163,10 @@ def user_login():
             return render_template('admin_dashboard.html')
         elif user:
             session['user_email'] = email
-            return render_template('student_dashboard.html')
+            #return render_template('student_dashboard.html')
+            return redirect(url_for('student_dashboard'))
         else:
-            return render_template('index.html', msg='Invalid credentials!')
+            return render_template('user_login.html', msg='Invalid credentials!')
     # return render_template('index.html')
     return render_template('user_login.html')
 
@@ -174,6 +178,7 @@ def student_dashboard():
         use = 'user_email' in session
         print("Hi",use)
         return redirect(url_for('user_login'))
+        #return render_template('student_dashboard.html')
     return render_template('student_dashboard.html')
 
 
@@ -271,24 +276,57 @@ def book_session():
 def about():
     return render_template('about.html')
 
-@app.route('/signup',methods=['GET', 'POST'])
+# @app.route('/signup',methods=['GET', 'POST'])
+# def signup():
+#     if request.method == 'POST':
+#         name = request.form['name']
+#         email = request.form['email']
+#         phone = request.form['phone']
+#         password = request.form['password']
+#         print(name,email)
+#         conn = sqlite3.connect('counsellors.db')
+#         cursor = conn.cursor()
+#         cursor.execute('''
+#             INSERT INTO users (name, email, phone, password)
+#             VALUES (?, ?, ?, ?)
+#         ''', (name, email, phone, password))
+#         conn.commit()
+#         conn.close()
+#         return render_template('user_login.html',msg='Signup successful!')
+#     return render_template('signup.html')
+
+
+@app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
         name = request.form['name']
         email = request.form['email']
         phone = request.form['phone']
         password = request.form['password']
-        print(name,email)
+
         conn = sqlite3.connect('counsellors.db')
         cursor = conn.cursor()
+
+        # Check if user already exists
+        cursor.execute("SELECT * FROM users WHERE email = ?", (email,))
+        existing_user = cursor.fetchone()
+
+        if existing_user:
+            conn.close()
+            return render_template('signup.html', error='User already exists with this email.')
+
+        # Insert new user
         cursor.execute('''
             INSERT INTO users (name, email, phone, password)
             VALUES (?, ?, ?, ?)
         ''', (name, email, phone, password))
         conn.commit()
         conn.close()
-        return render_template('user_login.html',msg='Signup successful!')
+
+        return render_template('user_login.html', msg='Signup successful!')
+
     return render_template('signup.html')
+
 
 
 

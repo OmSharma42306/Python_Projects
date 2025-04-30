@@ -2,6 +2,7 @@
 2) Admin Role
 3) Student Role
 
+Core Features Done!
 
 *) Student can: Sign up, log in, view counsellor types, send messages (issues).
 

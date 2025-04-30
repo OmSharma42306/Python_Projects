@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
-<h2 style="color:white;">Select Counsellor</h2>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 style="color:white;">Select Counsellor</h2>
+    <button class="btn btn-danger btn-custom" onclick="window.location.href='/student_dashboard'">Back</button>
+  </div>
 <ul class="list-group">
     {% for c in counsellors %}
     <li class="list-group-item">

@@ -2,13 +2,18 @@
 {% block title %}Student Dashboard{% endblock %}
 {% block content %}
 <div class="container text-white">
-  <h2>Welcome, {{ session['user_email'] }}</h2>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Welcome, {{ session['user_email'] }}</h2>
+    <button class="btn btn-danger btn-custom" onclick="window.location.href='/logout'">Logout</button>
+  </div>
+  <!-- <h2>Welcome, {{ session['user_email'] }}</h2> -->
+  
   <hr>
   <ul>
-    <li><a href="{{ url_for('select_counsellor') }}">Book a Session</a></li>
-    <li><a href="{{ url_for('view_bookings') }}">My Bookings</a></li>
-    <li><a href="{{ url_for('student_messages') }}">Messages</a></li>
-    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+    <li><a href="{{ url_for('select_counsellor') }}">Ask Guidance and Queries</a></li>
+    <!-- <li><a href="{{ url_for('view_bookings') }}">My Bookings</a></li> -->
+    <li><a href="{{ url_for('student_messages') }}">View Recent Messages</a></li>
+    
   </ul>
 </div>
 {% endblock %}
