@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 style="color:white;">Select Counsellor</h2>
+<ul class="list-group">
+    {% for c in counsellors %}
+    <li class="list-group-item">
+        {{ c[1] }} ({{ c[2] }})
+        <a href="{{ url_for('send_message', counsellor_id=c[0]) }}" class="btn btn-sm btn-primary float-end">Send Message</a>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

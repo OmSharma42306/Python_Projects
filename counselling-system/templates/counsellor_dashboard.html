@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 style="color:white;">Messages from Students</h2>
+{% for m in messages %}
+<div class="card mb-2">
+    <div class="card-body">
+        <h5 class="card-title">{{ m[1] }}</h5>
+        <p class="card-text"><strong>Message:</strong> {{ m[2] }}</p>
+        <p><strong>Reply:</strong> {{ m[3] if m[3] else "No reply yet." }}</p>
+        {% if not m[3] %}
+        <form method="post" action="{{ url_for('reply_message', message_id=m[0]) }}">
+            <textarea name="reply" class="form-control" required></textarea><br>
+            <button type="submit" class="btn btn-sm btn-primary">Reply</button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Student Dashboard{% endblock %}
+{% block content %}
+<div class="container text-white">
+  <h2>Welcome, {{ session['user_email'] }}</h2>
+  <hr>
+  <ul>
+    <li><a href="{{ url_for('select_counsellor') }}">Book a Session</a></li>
+    <li><a href="{{ url_for('view_bookings') }}">My Bookings</a></li>
+    <li><a href="{{ url_for('student_messages') }}">Messages</a></li>
+    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+  </ul>
+</div>
+{% endblock %}

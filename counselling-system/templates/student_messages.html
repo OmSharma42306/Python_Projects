@@ -1,0 +1,7 @@
+<h2>My Messages</h2>
+<ul>
+  {% for message, reply, counsellor_name in messages %}
+    <li><strong>To {{ counsellor_name }}:</strong> {{ message }}<br>
+        <strong>Reply:</strong> {{ reply or "No reply yet" }}</li>
+  {% endfor %}
+</ul>
