@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
     <title>AK IPL</title>
     <style>
         body {
@@ -606,48 +608,124 @@ function updateTotalPrice() {
 
 
    // Confirm booking and generate ticket
-   document.getElementById("confirm-booking").addEventListener("click", function() {
+//    document.getElementById("confirm-booking").addEventListener("click", function() {
+//     const name = document.getElementById("booking-name").value;
+//     const quantity = document.getElementById("ticket-quantity").value; // Get selected quantity
+//     document.getElementById("info").style.display = "none";
+//     const matchDate = document.getElementById("booking-match-date").value;
+//     const matchTime = document.getElementById("booking-match-time").value;
+//     const matchTeams = document.getElementById("booking-match-teams").value;
+//     const matchVenue = document.getElementById("booking-match-venue").value;
+
+//     // Send booking data to the server
+//     fetch('/book_ticket', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify({
+//             name: name,
+//             match_date: matchDate,
+//             match_time: matchTime,
+//             match_teams: matchTeams,
+//             match_venue: matchVenue,
+//             seat_price: selectedPrice * quantity, // Correctly calculate total price
+//             quantity: quantity // Include quantity in the booking data
+//         }),
+//     })
+//     .then(response => response.json())
+//     .then(data => {
+//         alert(data.message); // Show success message
+//         // Show ticket details in table format
+//         document.getElementById("ticket-name").innerText = name;
+//         document.getElementById("ticket-match").innerText = `${matchDate} - ${matchTime}: ${matchTeams}`;
+//         document.getElementById("ticket-venue").innerText = matchVenue;
+//         document.getElementById("ticket-price").innerText = `Rs. ${selectedPrice * quantity}`; // Update price based on quantity
+//         document.getElementById("ticket-display").style.display = "block"; // Show ticket display
+
+//         // Hide booking container
+//         document.getElementById("booking-container").classList.add("hidden");
+//     })
+//     .catch((error) => {
+//         console.error('Error:', error);
+//     });
+// });
+
+
+document.getElementById("confirm-booking").addEventListener("click", function () {
     const name = document.getElementById("booking-name").value;
-    const quantity = document.getElementById("ticket-quantity").value; // Get selected quantity
-    document.getElementById("info").style.display = "none";
+    const quantity = parseInt(document.getElementById("ticket-quantity").value, 10);
     const matchDate = document.getElementById("booking-match-date").value;
     const matchTime = document.getElementById("booking-match-time").value;
     const matchTeams = document.getElementById("booking-match-teams").value;
     const matchVenue = document.getElementById("booking-match-venue").value;
 
-    // Send booking data to the server
-    fetch('/book_ticket', {
+    const totalAmount = selectedPrice * quantity;
+
+    fetch('/create_order', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-            name: name,
-            match_date: matchDate,
-            match_time: matchTime,
-            match_teams: matchTeams,
-            match_venue: matchVenue,
-            seat_price: selectedPrice * quantity, // Correctly calculate total price
-            quantity: quantity // Include quantity in the booking data
-        }),
+        body: JSON.stringify({ amount: totalAmount })
     })
-    .then(response => response.json())
-    .then(data => {
-        alert(data.message); // Show success message
-        // Show ticket details in table format
-        document.getElementById("ticket-name").innerText = name;
-        document.getElementById("ticket-match").innerText = `${matchDate} - ${matchTime}: ${matchTeams}`;
-        document.getElementById("ticket-venue").innerText = matchVenue;
-        document.getElementById("ticket-price").innerText = `Rs. ${selectedPrice * quantity}`; // Update price based on quantity
-        document.getElementById("ticket-display").style.display = "block"; // Show ticket display
+    .then(res => res.json())
+    .then(order => {
+        console.log(order.id)
+        console.log(order)
+        const options = {
+            "key": "rzp_test_xt0FlQyPwPEQZS", // Razorpay key_id
+            "amount": order.amount,
+            "currency": "INR",
+            "name": "Match Ticket Booking",
+            "description": "Ticket Payment",
+            "order_id": order.id,
+            "handler": function (response) {
+                // After payment success
+                fetch('/book_ticket', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        match_date: matchDate,
+                        match_time: matchTime,
+                        match_teams: matchTeams,
+                        match_venue: matchVenue,
+                        seat_price: selectedPrice * quantity,
+                        quantity: quantity,
+                        payment_id: response.razorpay_payment_id,
+                        order_id: response.razorpay_order_id
+                    }),
+                })
+                .then(res => res.json())
+                .then(data => {
+                    alert("Booking Successful!");
 
-        // Hide booking container
-        document.getElementById("booking-container").classList.add("hidden");
-    })
-    .catch((error) => {
-        console.error('Error:', error);
+                    // Show ticket
+                    document.getElementById("ticket-name").innerText = name;
+                    document.getElementById("ticket-match").innerText = `${matchDate} - ${matchTime}: ${matchTeams}`;
+                    document.getElementById("ticket-venue").innerText = matchVenue;
+                    document.getElementById("ticket-price").innerText = `Rs. ${selectedPrice * quantity}`;
+                    document.getElementById("ticket-display").style.display = "block";
+                    document.getElementById("booking-container").classList.add("hidden");
+                });
+            },
+            "prefill": {
+                "name": name
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
+
+        const rzp = new Razorpay(options);
+        rzp.open();
     });
 });
+
+
 
 // Download ticket functionality
 document.getElementById("download-ticket").addEventListener("click", function() {

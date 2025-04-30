@@ -1,9 +1,16 @@
 from flask import Flask, render_template, request, redirect, url_for, session,jsonify
 import sqlite3
 import time
-
+import razorpay
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Needed for session management
+
+
+client = razorpay.Client(auth=("rzp_test_xt0FlQyPwPEQZS", "bViBMXjdJjIYG9Fz9zGYF6nX"))
+razorpay_key = "bViBMXjdJjIYG9Fz9zGYF6nX"
+
+
+
 
 
 def init_db():
@@ -50,8 +57,8 @@ def init_db():
 
 
 # Fake admin credentials for demo
-ADMIN_USERNAME = 'admin'
-ADMIN_PASSWORD = 'admin123'
+ADMIN_USERNAME = "xyz123@gmail.com"
+ADMIN_PASSWORD = "xyz"
 
 @app.route('/')
 def home():
@@ -63,7 +70,7 @@ def admin_login():
         username = request.form['username']
         password = request.form['password']
 
-        if username == "xyz123@gmail.com" and password == "xyz":
+        if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
             session['admin_logged_in'] = True
             return redirect(url_for('admin_dashboard'))
         else:
@@ -135,6 +142,20 @@ def getticket():
     # bot.sendDocument(chat_id, open('C:/Users/Akash B N/Downloads/ticket.pdf', 'rb'))
     return render_template('xyz.html',msg='Ticket sent to your telegram!')
 
+@app.route('/create_order', methods=['POST'])
+def create_order():
+    data = request.get_json()
+    amount = int(data['amount']) * 100  # Convert to paise
+
+    order = client.order.create({
+        'amount': amount,
+        'currency': 'INR',
+        'payment_capture': '1'
+    })
+
+    return jsonify(order)
+
+
 @app.route('/book_ticket', methods=['POST'])
 def book_ticket():
     data = request.get_json()  # Get JSON data from the request
@@ -155,6 +176,97 @@ def book_ticket():
     conn.close()
 
     return jsonify({'message': 'Ticket booked successfully!'})
+# @app.route('/create_order', methods=['POST'])
+# def create_razorpay_order():
+#     data = request.get_json()
+#     #amount = int(data['seat_price']) * 100  # in paise
+#     amount = int(data['amount']) * 100  # Convert to paise
+#     name = data['name']
+#     match_date = data['match_date']
+#     match_time = data['match_time']
+#     match_teams = data['match_teams']
+#     match_venue = data['match_venue']
+#     quantity = data.get('quantity', 1)
+
+#     # Save ticket temporarily if needed or just pass data for now
+
+#     order = client.order.create({
+#         'amount': amount,
+#         'currency': 'INR',
+#         'payment_capture': '1'
+#     })
+
+#     return {
+#         'order_id': order['id'],
+#         'amount': amount,
+#         'razorpay_key': razorpay_key,
+#         'ticket_info': {
+#             'name': name,
+#             'match_date': match_date,
+#             'match_time': match_time,
+#             'match_teams': match_teams,
+#             'match_venue': match_venue,
+#             'quantity': quantity
+#         }
+#     }
+
+
+
+
+@app.route('/buy_ticket/<int:ticket_id>', methods=['GET'])
+def buy_ticket(ticket_id):
+    if 'user_id' not in session:
+        return redirect(url_for('user_login'))
+
+    conn = sqlite3.connect('tickets.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT seat_price, match_teams FROM Ticket WHERE id = ?", (ticket_id,))
+    ticket = cursor.fetchone()
+    conn.close()
+
+    if not ticket:
+        return "Ticket not found", 404
+
+    amount = ticket[0] * 100  # Razorpay uses paise
+    match_teams = ticket[1]
+
+    # Razorpay order creation
+    order = client.order.create({
+        "amount": amount,
+        "currency": "INR",
+        "payment_capture": "1"
+    })
+
+    return render_template("checkout.html", 
+                           amount=amount, 
+                           razorpay_key=razorpay_key, 
+                           order_id=order['id'],
+                           ticket_id=ticket_id,
+                           match_teams=match_teams)
+
+
+
+@app.route('/payment_success', methods=['POST'])
+def payment_success():
+    data = request.get_json()
+    user_id = session.get('user_id')
+    ticket_id = data['ticket_id']
+
+    # You can verify signature here using:
+    # razorpay_client.utility.verify_payment_signature(...)
+
+    # Save the booking
+    conn = sqlite3.connect('tickets.db')
+    cursor = conn.cursor()
+    cursor.execute('''
+        INSERT INTO Bookings (user_id, ticket_id)
+        VALUES (?, ?)
+    ''', (user_id, ticket_id))
+    conn.commit()
+    conn.close()
+
+    return jsonify({'message': 'Payment successful and ticket booked!'})
+
 
 @app.route('/viewBookings')
 def viewBookings():
