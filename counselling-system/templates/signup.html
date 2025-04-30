@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}User Signup{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2>User Signup</h2>
+  {% if error %}
+  <div class="alert alert-danger">{{ error }}</div>
+  {% endif %}
+  <form method="POST" action="/signup">
+    <div class="mb-3">
+        <label class="form-label">Name</label>
+        <input type="text" class="form-control" placeholder="Name" name="name" required>
+      </div>
+
+
+    <div class="mb-3">
+      <label class="form-label">Username</label>
+      <input type="text" class="form-control" name="email" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Phone</label>
+        <input type="text" class="form-control" name="phone" required>
+      </div>
+    <div class="mb-3">
+      <label class="form-label">Password</label>
+      <input type="password" class="form-control" name="password" required>
+    </div>
+    
+    <button type="submit" class="btn btn-primary">SignUp</button>
+  </form>
+</div>
+{% endblock %}
