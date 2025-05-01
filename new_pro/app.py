@@ -3,6 +3,9 @@ import sqlite3
 import time
 import razorpay
 import smtplib
+from reportlab.pdfgen import canvas
+import uuid
+import os
 from email.message import EmailMessage
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Needed for session management
@@ -165,6 +168,7 @@ def signup():
 @app.route('/getticket')
 def getticket():
     user_email = session.get('user_email')  # Make sure to store email earlier in session
+    pdf_path = session.get('pdf_path')
     if not user_email:
         return "Email not found. Booking incomplete.", 400
 
@@ -175,20 +179,36 @@ def getticket():
     msg.set_content('Thanks for booking with us! Your ticket is attached.')
 
     # Attach the PDF ticket
-    with open('ticket.pdf', 'rb') as f:
-        file_data = f.read()
-        msg.add_attachment(file_data, maintype='application', subtype='pdf', filename='ticket.pdf')
+    # with open('ticket.pdf', 'rb') as f:
+    #     file_data = f.read()
+    #     msg.add_attachment(file_data, maintype='application', subtype='pdf', filename='ticket.pdf')
 
     # Connect to Gmail SMTP and send the email
+    # try:
+    #     with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+    #         smtp.login('omsharma.83173@gmail.com', 'dkno aerq jxij ufur')  # Use app password
+    #         smtp.send_message(msg)
+    #     return render_template('xyz.html', msg='Ticket sent to your email!')
+    # except Exception as e:
+    #     print("Error sending email:", e)
+    #     return render_template('xyz.html', msg='Failed to send email.')
+
     try:
+        with open(pdf_path, 'rb') as f:
+            file_data = f.read()
+            msg.add_attachment(file_data, maintype='application', subtype='pdf', filename='Match_Ticket.pdf')
+
         with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
-            smtp.login('omsharma.83173@gmail.com', 'dkno aerq jxij ufur')  # Use app password
+            smtp.login('omsharma.83173@gmail.com', 'dkno aerq jxij ufur')
             smtp.send_message(msg)
+
+        # Optionally clean up the file
+        os.remove(pdf_path)
+
         return render_template('xyz.html', msg='Ticket sent to your email!')
     except Exception as e:
         print("Error sending email:", e)
         return render_template('xyz.html', msg='Failed to send email.')
-
 
 @app.route('/create_order', methods=['POST'])
 def create_order():
@@ -222,6 +242,22 @@ def book_ticket():
     ''', (name, match_date, match_time, match_teams, match_venue, seat_price))
     conn.commit()
     conn.close()
+
+
+     # Create PDF ticket
+    pdf_filename = f"{uuid.uuid4()}.pdf"
+    pdf_path = os.path.join("temp_tickets", pdf_filename)
+    c = canvas.Canvas(pdf_path)
+    c.drawString(100, 750, f"Match Ticket for {name}")
+    c.drawString(100, 730, f"Teams: {match_teams}")
+    c.drawString(100, 710, f"Date: {match_date}")
+    c.drawString(100, 690, f"Time: {match_time}")
+    c.drawString(100, 670, f"Venue: {match_venue}")
+    c.drawString(100, 650, f"Price: ₹{seat_price}")
+    c.save()
+
+    # Save path to session
+    session['pdf_path'] = pdf_path
 
     return jsonify({'message': 'Ticket booked successfully!'})
 
