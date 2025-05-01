@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Student Login{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2 style="color: white;">Student Login</h2>
+  {% if error %}
+  <div class="alert alert-danger">{{ error }}</div>
+  {% endif %}
+  <form method="post" action="/user_login">
+    <div class="mb-3">
+      <label class="form-label" style="color: white;" >Username</label>
+      <input type="email" required class="form-control" name="email" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label" style="color: white;">Password</label>
+      <input type="password"  minlength="6" class="form-control" name="password" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Login</button>
+  </form>
+  <br>
+  
+  <a  href="{{ url_for('signup') }}">SignUp</a>
+</div>
+{% endblock %}
