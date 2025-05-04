@@ -7,6 +7,10 @@ from reportlab.pdfgen import canvas
 import uuid
 import os
 from email.message import EmailMessage
+from reportlab.lib.pagesizes import landscape
+from reportlab.lib.units import mm
+from reportlab.lib import colors
+from reportlab.pdfgen import canvas
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Needed for session management
 
@@ -207,20 +211,54 @@ def book_ticket():
     conn.commit()
     conn.close()
 
-
+# PDF generation inside book_ticket
+    ticket_width = 160 * mm
+    ticket_height = 60 * mm
      # Create PDF ticket
     pdf_filename = f"{uuid.uuid4()}.pdf"
     pdf_path = os.path.join("temp_tickets", pdf_filename)
-    c = canvas.Canvas(pdf_path)
-    c.drawString(100, 750, f"Match Ticket for {name}")
-    c.drawString(100, 730, f"Teams: {match_teams}")
-    c.drawString(100, 710, f"Date: {match_date}")
-    c.drawString(100, 690, f"Time: {match_time}")
-    c.drawString(100, 670, f"Venue: {match_venue}")
-    c.drawString(100, 650, f"Price: ₹{seat_price}")
+    # c = canvas.Canvas(pdf_path)
+    # c.drawString(100, 750, f"Match Ticket for {name}")
+    # c.drawString(100, 730, f"Teams: {match_teams}")
+    # c.drawString(100, 710, f"Date: {match_date}")
+    # c.drawString(100, 690, f"Time: {match_time}")
+    # c.drawString(100, 670, f"Venue: {match_venue}")
+    # c.drawString(100, 650, f"Price: ₹{seat_price}")
+    # c.save()
+
+    # # Save path to session
+    # session['pdf_path'] = pdf_path
+    c = canvas.Canvas(pdf_path, pagesize=(ticket_width, ticket_height))
+
+# Background rectangle (ticket border)
+    c.setStrokeColor(colors.darkblue)
+    c.setLineWidth(2)
+    c.rect(5 * mm, 5 * mm, ticket_width - 10 * mm, ticket_height - 10 * mm, stroke=1, fill=0)
+
+# Header
+    c.setFont("Helvetica-Bold", 16)
+    c.drawCentredString(ticket_width / 2, ticket_height - 15 * mm, "MATCH TICKET")
+
+# Event Info
+    c.setFont("Helvetica", 11)
+    c.drawString(15 * mm, ticket_height - 30 * mm, f"Name: {name}")
+    c.drawString(15 * mm, ticket_height - 38 * mm, f"Teams: {match_teams}")
+    c.drawString(15 * mm, ticket_height - 46 * mm, f"Date: {match_date}")
+    c.drawString(15 * mm, ticket_height - 54 * mm, f"Time: {match_time}")
+
+# Venue & Price
+    c.drawString(90 * mm, ticket_height - 30 * mm, f"Venue: {match_venue}")
+    c.drawString(90 * mm, ticket_height - 38 * mm, f"Price: ₹{seat_price}")
+
+# Footer line or barcode placeholder
+    # c.setStrokeColor(colors.lightgrey)
+    # c.line(15 * mm, 15 * mm, ticket_width - 15 * mm, 15 * mm)
+
+    c.setFont("Helvetica-Oblique", 8)
+    c.drawCentredString(ticket_width / 2, 8 * mm, "Thank you for booking with us!")
+
     c.save()
 
-    # Save path to session
     session['pdf_path'] = pdf_path
 
     return jsonify({'message': 'Ticket booked successfully!'})
