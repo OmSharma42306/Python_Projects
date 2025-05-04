@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <title>AK IPL</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: url('static/back.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            transition: background 0.5s ease-in-out;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            text-align: center;
+            width: 300px;
+            border-radius: 10px;
+            animation: fadeIn 1s ease-in-out;
+        }
+        .hidden {
+            display: none;
+        }
+        input {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: transparent;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100px;
+            padding: 10px;
+            background: #4facfe;
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+        }
+        button:hover {
+            background: #00c6fb;
+            transform: scale(1.05);
+        }
+        .navbar {
+            display: none;
+            
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+            width: 100%;
+            position: fixed;
+            top: 0;
+
+        }
+        .navbar a {
+            color: white;
+            left: 100px;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 10px 20px;
+            transition: 0.3s;
+        }
+        .navbar a:hover {
+            background: #4facfe;
+            border-radius: 5px;
+        }
+        .matches-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 200px;
+            width: 200%;
+       
+            background-size: 1000px;
+            background-attachment: fixed;
+            height: 700px;
+        }
+        .match {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 10px;
+            margin: 10px;
+            width: 500px;
+            text-align: center;
+            justify-content: space-between;
+            animation: slideIn 0.5s ease-in-out;
+        }
+        .match img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid #000;
+    object-fit: cover;
+    display:flex;
+    margin-left: 65px;
+
+    
+}
+
+.seat-button {
+    width: 100%;
+    padding: 10px;
+    background: #4facfe;
+    border: none;
+    color: white;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px 0;
+    transition: background 0.3s, transform 0.3s;
+}
+
+.seat-button:hover {
+    background: #00fb3f;
+    transform: scale(1.05);
+}
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        #info {
+            background: transparent;
+            color: rgb(0, 0, 0);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 10px;
+            width: 500px;
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+            overflow: hidden;
+        }
+        #info p{
+            animation: inform 10s linear 0.5s infinite reverse;
+        }
+        @keyframes inform {
+            0% { transform: translateY(-200px); }
+            100% { transform: translateY(350px); }
+        }
+
+        #about-us-container {
+    text-align: center;
+    margin-top: 40px;
+    background-color: rgba(255, 255, 255, 0.8);
+    
+}
+#booking-container {
+    width: 400px; /* Set your desired width */
+    height: auto; /* Adjust height as needed */
+    max-height: 600px; /* Optional: set a maximum height */
+    overflow-y: auto; /* Optional: add scroll if content exceeds height */
+}
+
+    </style>
+</head>
+<body>
+
+    <div class="navbar" id="navbar">
+        <a href="#" id="show-matches">Matches</a> 
+       
+        <a href="" style="margin-left: 1100px;">About us</a>
+        <a href="/">Log out</a>
+    </div>
+
+  
+
+    <div class="container hidden" id="about-us-container" style="text-align: center;">
+        <h2>About Us</h2>
+        <p id="about-us-text">This is a simple application developed by 3 friends named as Akshay, Prajwal and Harish, main motive of this appication is to book tickets for IPL maches in offline.</p>
+
+        <br>
+        <p>You can connect with us and ask your queries here </p> 
+        <a href="https://wa.me/7975004993" target="_blank">
+            <img src="static/whatsaap.jpg" alt="WhatsApp" 
+                style="width: 50px; height: 50px; border-radius: 50%; display: inline-block;">
+                
+        </a>
+      
+
+    </div>
+    
+    
+    <div id="info">
+      
+        <h1><p> Season 1 (2008)  Rajasthan Royals<br>
+            <br>
+            Season 2 (2009) Deccan Chargers     <br>
+            <br>
+            Season 3 (2010)  Chennai Super Kings <br>
+            <br>
+            Season 4 (2011)  Chennai Super Kings <br>
+            <br>
+            Season 5 (2012)  Kolkata Knight Riders <br>
+            <br>
+            Season 6 (2013)  Mumbai Indians <br>
+            <br>
+            Season 7 (2014)  Kolkata Knight Riders <br>
+            <br>
+            Season 8 (2015)  Mumbai Indians <br>
+            <br>
+            Season 9 (2016)  Sunrisers Hyderabad <br>
+            <br>
+            Season 10 (2017) Mumbai Indians <br>
+            <br>
+            Season 11 (2018) Chennai Super Kings <br>
+            <br>
+            Season 12 (2019) Mumbai Indians  <br>
+            <br>
+            Season 13 (2020) Mumbai Indians <br>
+            <br>
+            Season 14 (2021) Chennai Super Kings <br>
+            <br>
+            Season 15 (2022) Gujarat Titans <br>
+            <br>
+            Season 16 (2023) Chennai Super Kings <br>
+            <br>
+            Season 17 (2024) Kolkata Knight Riders <br>
+            <br> </h1>
+        </p>
+    </div>
+
+    <div class="matches-container" id="matches-section">
+    
+        <h1 style="background-color: white;">IPL 2025 Match Schedule</h1>
+        <div id="matches-list"></div>
+    </div>
+
+    <br>
+    <br>
+    <br>
+    <br>
+
+    <div class="container hidden" id="booking-container">
+        <h2>Book Ticket</h2>
+        <form id="booking-form">
+            <input type="text" id="booking-name" placeholder="Your Name" required>
+            <input type="text" id="booking-match-date" placeholder="Match Date" readonly>
+            <input type="text" id="booking-match-time" placeholder="Match Time" readonly>
+            <input type="text" id="booking-match-teams" placeholder="Match Teams" readonly>
+            <input type="text" id="booking-match-venue" placeholder="Match Venue" readonly>
+            
+
+          
+            <!-- Ticket Quantity Dropdown -->
+            <div>
+                <label for="ticket-quantity">Number of Tickets:</label>
+                <select id="ticket-quantity">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+            </div>
+
+            <!-- Seating Option Buttons -->
+            <div>
+                <button type="button" class="seat-button" id="front-seat" value="800">Front - ₹800</button>
+                <button type="button" class="seat-button" id="middle-seat" value="500">Middle - ₹500</button>
+                <button type="button" class="seat-button" id="last-seat" value="300">Last - ₹300</button>
+                
+            </div>
+            
+            <p id="seat-price" style="font-weight: bold;"></p>
+
+
+            <button type="button" id="confirm-booking" style="width: 400px; background-color: greenyellow; color: black;">Confirm Now</button>
+        </form>
+        <p id="booking-message" style="color: green;"></p>
+        <button id="back-to-matches" style="width: 200px; background-color: red;">Back to Matches</button>
+    </div>
+    
+    <div class="container hidden" id="ticket-display" style="text-align: center;">
+        <h2>Your Ticket</h2>
+        <table style="margin: 0 auto; border-collapse: collapse; width: 80%;">
+            <tr>
+                <th style="border: 1px solid #ccc; padding: 10px;">Name</th>
+                <th style="border: 1px solid #ccc; padding: 10px;">Match</th>
+                <th style="border: 1px solid #ccc; padding: 10px;">Venue</th>
+                <th style="border: 1px solid #ccc; padding: 10px;">Price</th>
+            </tr>
+            <tr>
+                <td id="ticket-name" style="border: 1px solid #ccc; padding: 10px;"></td>
+                <td id="ticket-match" style="border: 1px solid #ccc; padding: 10px;"></td>
+                <td id="ticket-venue" style="border: 1px solid #ccc; padding: 10px;"></td>
+                <td id="ticket-price" style="border: 1px solid #ccc; padding: 10px;"></td>
+            </tr>
+        </table>
+        <button id="download-ticket" style="margin-top: 20px; padding: 10px; background: #4facfe; color: white; border: none; border-radius: 5px; cursor: pointer;">Download Ticket</button>
+        
+
+        
+    <script>
+        
+       
+        const matches = [
+    { date: 'MAR, SAT 22', time: '7:30 pm IST', team1: 'Kolkata Knight Riders', team1Img: 'static/kkr.jpg', team2: 'Royal Challengers Bengaluru', team2Img: 'static/rcb.jpg', venue: 'Kolkata' },
+    { date: 'MAR, SUN 23', time: '3:30 pm IST', team1: 'Sunrisers Hyderabad', team1Img: 'static/srh.jpg', team2: 'Rajasthan Royals', team2Img: 'static/rr.jpg', venue: 'Hyderabad' },
+    { date: 'MAR, SUN 23', time: '7:30 pm IST', team1: 'Chennai Super Kings', team1Img: 'static/csk.jpg', team2: 'Mumbai Indians', team2Img: 'static/mi.jpg', venue: 'Chennai' },
+    { date: 'MAR, MON 24', time: '7:30 pm IST', team1: 'Delhi Capitals', team1Img: 'static/dc.jpg', team2: 'Lucknow Super Giants', team2Img: 'static/lsg.jpg', venue: 'Vishakhapatnam' },
+    { date: 'MAR, TUE 25', time: '7:30 pm IST', team1: 'Gujarat Titans', team1Img: 'static/gt.jpg', team2: 'Punjab Kings', team2Img: 'static/pk.jpg', venue: 'Ahmedabad' },
+    { date: 'MAR, WED 26', time: '7:30 pm IST', team1: 'Rajasthan Royals', team1Img: 'static/rr.jpg', team2: 'Kolkata Knight Riders', team2Img: 'static/kkr.jpg', venue: 'Guwahati' },
+    { date: 'MAR, THU 27', time: '7:30 pm IST', team1: 'Sunrisers Hyderabad', team1Img: 'static/srh.jpg', team2: 'Lucknow Super Giants', team2Img: 'static/lsg.jpg', venue: 'Hyderabad' },
+    { date: 'MAR, FRI 28', time: '7:30 pm IST', team1: 'Chennai Super Kings', team1Img: 'static/csk.jpg', team2: 'Royal Challengers Bengaluru', team2Img: 'static/rcb.jpg', venue: 'Chennai' },
+    { date: 'MAR, SAT 29', time: '7:30 pm IST', team1: 'Gujarat Titans', team1Img: 'static/gt.jpg', team2: 'Mumbai Indians', team2Img: 'static/mi.jpg', venue: 'Ahmedabad' },
+    { date: 'MAR, SUN 30', time: '3:30 pm IST', team1: 'Delhi Capitals', team1Img: 'static/dc.jpg', team2: 'Sunrisers Hyderabad', team2Img: 'static/srh.jpg', venue: 'Vishakapatnam' },
+    { date: 'MAR, SUN 30', time: '7:30 pm IST', team1: 'Rajasthan Royals', team1Img: 'static/rr.jpg', team2: 'Chennai Super Kings', team2Img: 'static/csk.jpg', venue: 'Guwahati' },
+    { date: 'APR, MON 31', time: '7:30 pm IST', team1: 'Mumbai Indians', team1Img: 'static/mi.jpg', team2: 'Kolkata Knight Riders', team2Img: 'static/kkr.jpg', venue: 'Mumbai' },
+    { date: 'MAY, TUE 1', time: '7:30 pm IST', team1: 'Lucknow Super Giants', team1Img: 'static/lsg.jpg', team2: 'Punjab Kings', team2Img: 'static/pk.jpg', venue: 'Lacknow' },
+    { date: 'APR, WED 2', time: '7:30 pm IST', team1: 'Royal Challengers Bengaluru', team1Img: 'static/rcb.jpg', team2: 'Gujarat Titans', team2Img: 'static/gt.jpg', venue: 'Bengaluru' },
+    { date: 'APR, THU 3', time: '7:30 pm IST', team1: 'Kolkata Knight Riders', team1Img: 'static/kkr.jpg', team2: 'Sunrisers Hyderabad', team2Img: 'static/srh.jpg', venue: 'Kolkata' },
+    { date: 'APR, FRI 4', time: '7:30 pm IST', team1: 'Lucknow Super Giants', team1Img: 'static/lsg.jpg', team2: 'Mumbai Indians', team2Img: 'static/mi.jpg', venue: 'Lucknow' },
+    { date: 'APR, SAT 5', time: '3:30 pm IST', team1: 'Chennai Super Kings', team1Img: 'static/csk.jpg', team2: 'Delhi Capitals', team2Img: 'static/dc.jpg', venue: 'Chennai' },
+    { date: 'APR, SAT 5', time: '7:30 pm IST', team1: 'Punjab Kings', team1Img: 'static/pk.jpg', team2: 'Rajasthan Royals', team2Img: 'static/rr.jpg', venue: 'New chadigarh' },
+    { date: 'APR, SUN 6', time: '3:30 pm IST', team1: 'Kolkata Knight Riders', team1Img: 'static/kkr.jpg', team2: 'Lucknow Super Giants', team2Img: 'static/lsg.jpg', venue: 'Kolkata' },
+    { date: 'APR, SUN 6', time: '7:30 pm IST', team1: 'Sunrisers Hyderabad', team1Img: 'static/srh.jpg', team2: 'Gujarat Titans', team2Img: 'static/gt.jpg', venue: 'Hydarabad' },
+    { date: 'APR, MON 7', time: '7:30 pm IST', team1: 'Mumbai Indians', team1Img: 'static/mi.jpg', team2: 'Royal Challengers Bengaluru', team2Img: 'static/rcb.jpg', venue: 'Mumbai' },
+    { date: 'APR, TUE 8', time: '7:30 pm IST', team1: 'Punjab Kings', team1Img: 'static/pk.jpg', team2: 'Chennai Super Kings', team2Img: 'static/csk.jpg', venue: 'New chandigarh' },
+    { date: 'APR, WEB 9', time: '7:30 pm IST', team1: 'Gujarat Titans', team1Img: 'static/gt.jpg', team2: 'Rajasthan Royals', team2Img: 'static/rr.jpg', venue: 'Ahmedabad' },
+    { date: 'APR, THU 10', time: '7:30 pm IST', team1: 'Royal Challengers Bengaluru', team1Img: 'static/rcb.jpg', team2: 'Delhi Capitals', team2Img: 'static/dc.jpg', venue: 'Bengaluru' },
+    { date: 'APR, FRI 11', time: '7:30 pm IST', team1: 'Chennai Super Kings', team1Img: 'static/csk.jpg', team2: 'Kolkata Knight Riders', team2Img: 'static/kkr.jpg', venue: 'Chennai' },
+    { date: 'APR, SAT 12', time: '3:30 pm IST', team1: 'Lucknow Super Giants', team1Img: 'static/lsg.jpg', team2: 'Gujarat Titans', team2Img: 'static/gt.jpg', venue: 'Lucknow' },
+    { date: 'APR, SAT 12', time: '7:30 pm IST', team1: 'Sunrisers Hyderabad', team1Img: 'static/srh.jpg', team2: 'Punjab Kings', team2Img: 'static/pk.jpg', venue: 'Hydarabad' },
+    { date: 'APR, SUN 13', time: '3:30 pm IST', team1: 'Rajasthan Royals', team1Img: 'static/rr.jpg', team2: 'Royal Challengers Bengaluru', team2Img: 'static/rcb.jpg', venue: 'Jaipur' },
+    { date: 'APR, SUN 13', time: '7:30 pm IST', team1: 'Delhi Capitals', team1Img: 'static/dc.jpg', team2: 'Mumbai Indians', team2Img: 'static/mi.jpg', venue: 'Delhi' },
+    { date: 'APR, MON 14', time: '7:30 pm IST', team1: 'Lucknow Super Giants', team1Img: 'static/lsg.jpg', team2: 'Chennai Super Kings', team2Img: 'static/csk.jpg', venue: 'Lucknow' },
+    { date: 'APR, TUE 15', time: '7:30 pm IST', team1: 'Punjab Kings', team1Img: 'static/pk.jpg', team2: 'Kolkata Knight Riders', team2Img: 'static/kkr.jpg', venue: 'New Chandigarh' },
+    { date: 'APR, WED 16', time: '3:30 pm IST', team1: 'Delhi Capitals', team1Img: 'static/dc.jpg', team2: 'Rajasthan Royals', team2Img: 'static/rr.jpg', venue: 'Delhi' },
+    { date: 'APR, THU 17', time: '7:30 pm IST', team1: 'Mumbai Indians', team1Img: 'static/mi.jpg', team2: 'Sunrisers Hyderabad', team2Img: 'static/srh.jpg', venue: 'Mumbai' },
+    { date: 'APR, FRI 18', time: '7:30 pm IST', team1: 'Royal Challengers Bengaluru', team1Img: 'static/rcb.jpg', team2: 'Punjab Kings', team2Img: 'static/pk.jpg', venue: 'Bengaluru' },
+    { date: 'APR, SAT 19', time: '3:30 pm IST', team1: 'Gujarat Titans', team1Img: 'static/gt.jpg', team2: 'Delhi Capitals', team2Img: 'static/dc.jpg', venue: 'Ahmedabad' },
+    { date: 'APR, SAT 19', time: '7:30 pm IST', team1: 'Rajasthan Royals', team1Img: 'static/rr.jpg', team2: 'Lucknow Super Giants', team2Img: 'static/lsg.jpg', venue: 'Jaipur' },
+    { date: 'APR, SUN 20', time: '3:30 pm IST', team1: 'Punjab Kings', team1Img: 'static/pk.jpg', team2: 'Royal Challengers Bengaluru', team2Img: 'static/rcb.jpg', venue: 'New Chandigarh' },
+    { date: 'APR, SUN 20', time : '7:30 pm IST', team1: 'Mumbai Indians', team1Img: 'static/mi.jpg', team2: 'Chennai Super Kings', team2Img: 'static/csk.jpg', venue: 'Mumbai' },
+    { date: 'APR, MON 21', time: '7:30 pm IST', team1: 'Kolkata Knight Riders', team1Img: 'static/kkr.jpg', team2: 'Gujarat Titans', team2Img: 'static/gt.jpg', venue: 'Kolkata' },
+    { date: 'APR, TUE 22', time: '7:30 pm IST', team1: 'Lucknow Super Giants', team1Img: 'static/lsg.jpg', team2: 'Delhi Capitals', team2Img: 'static/dc.jpg', venue: 'Lucknow' },
+    { date: 'APR, WED 23', time: '7:30 pm IST', team1: 'Sunrisers Hyderabad', team1Img: 'static/srh.jpg', team2: 'Mumbai Indians', team2Img: 'static/mi.jpg', venue: 'Hydarabad' },
+    { date: 'APR, THU 24', time: '7:30 pm IST', team1: 'Royal Challengers Bengaluru', team1Img: 'static/rcb.jpg', team2: 'Rajasthan Royals', team2Img: 'static/rr.jpg', venue: 'Bengaluru' },
+    { date: 'APR, FRI 25', time: '7:30 pm IST', team1: 'Chennai Super Kings', team1Img: 'static/csk.jpg', team2: 'Sunrisers Hyderabad', team2Img: 'static/srh.jpg', venue: 'Chennai' },
+    { date: 'APR, SAT 26', time: '7:30 pm IST', team1: 'Kolkata Knight Riders', team1Img: 'static/kkr.jpg', team2: 'Punjab Kings', team2Img: 'static/pk.jpg', venue: 'Kolkata' },
+    { date: 'APR, SUN 27', time: '3:30 pm IST', team1: 'Mumbai Indians', team1Img: 'static/mi.jpg', team2: 'Lucknow Super Giants', team2Img: 'static/lsg.jpg', venue: 'Mumbai' },
+    { date: 'APR, SUN 27', time: '3:30 pm IST', team1: 'Delhi Capitals', team1Img: 'static/dc.jpg', team2: 'Royal Challengers Bengaluru', team2Img: 'static/rcb.jpg', venue: 'Delhi' },
+    { date: 'APR, MON 28', time: '7:30 pm IST', team1: 'Rajasthan Royals', team1Img: 'static/rr.jpg', team2: 'Gujarat Titans', team2Img: 'static/gt.jpg', venue: 'Jaipur' },
+    { date: 'APR, TUE 29', time: '7:30 pm IST', team1: 'Delhi Capitals', team1Img: 'static/dc.jpg', team2: 'Kolkata Knight Riders', team2Img: 'static/kkr.jpg', venue: 'Delhi' },
+    { date: 'APR, WED 30', time: '7:30 pm IST', team1: 'Chennai Super Kings', team1Img: 'static/csk.jpg', team2: 'Punjab Kings', team2Img: 'static/pk.jpg', venue: 'Chennai' },
+    { date: 'MAY, THU 1', time: '7:30 pm IST', team1: 'Rajasthan Royals', team1Img: 'static/rr.jpg', team2: 'Mumbai Indians', team2Img: 'static/mi.jpg', venue: 'Jaipur' },
+    { date: 'MAY, FRI 2', time: '7:30 pm IST', team1: 'Gujarat Titans', team1Img: 'static/gt.jpg', team2: 'Sunrisers Hyderabad', team2Img: 'static/srh.jpg', venue: 'Ahmedabad' },
+    { date: 'MAY, SAT 3', time: '7:30 pm IST', team1: 'Royal Challengers Bengaluru', team1Img: 'static/rcb.jpg', team2: 'Chennai Super Kings', team2Img: 'static/csk.jpg', venue: 'Bengaluru' },
+    { date: 'MAY, SUN 4', time: '3:30 pm IST', team1: 'Kolkata Knight Riders', team1Img: 'static/kkr.jpg', team2: 'Rajasthan Royals', team2Img: 'static/rr.jpg', venue: 'Kolkata' },
+    { date: 'MAY, SUN 4', time: '7:30 pm IST', team1: 'Punjab Kings', team1Img: 'static/pk.jpg', team2: 'Lucknow Super Giants', team2Img: 'static/lsg.jpg', venue: 'Dharamsala' },
+    { date: 'MAY, MON 5', time: '7:30 pm IST', team1: 'Sunrisers Hyderabad', team1Img: 'static/srh.jpg', team2: 'Delhi Capitals', team2Img: 'static/dc.jpg', venue: 'Hydarabad' },
+    { date: 'MAY, TUE 6', time: '7:30 pm IST', team1: 'Mumbai Indians', team1Img: 'mi.jpg', team2: 'Gujarat Titans', team2Img: 'static/gt.jpg', venue: 'Mumbai' },
+    { date: 'MAY, WED 7', time: '7:30 pm IST', team1: 'Kolkata Knight Riders', team1Img: 'kkr.jpg', team2: 'Chennai Super Kings', team2Img: 'static/csk.jpg', venue: 'Kolkata' },
+    { date: 'MAY, THU 8', time: '7:30 pm IST', team1: 'Punjab Kings', team1Img: 'static/pk.jpg', team2: 'Delhi Capitals', team2Img: 'static/dc.jpg', venue: 'Dharamsala' },
+    { date: 'MAY, FRI 9', time: '7:30 pm IST', team1: 'Lucknow Super Giants', team1Img: 'static/lsg.jpg', team2: 'Royal Challengers Bengaluru', team2Img: 'static/rcb.jpg', venue: 'Lucknow' },
+    { date: 'MAY, SAT 10', time: '7:30 pm IST', team1: 'Sunrisers Hyderabad', team1Img: 'static/srh.jpg', team2: 'Kolkata Knight Riders', team2Img: 'static/kkr.jpg', venue: 'Hydarabad' },
+    { date: 'MAY, SUN 11', time: '3:30 pm IST', team1: 'Punjab Kings', team1Img: 'static/pk.jpg', team2: 'Mumbai Indians', team2Img: 'static/mi.jpg', venue: 'Dharamsala' },
+    { date: 'MAY, SUN 11', time: '7:30 pm IST', team1: 'Delhi Capitals', team1Img: 'static/dc.jpg', team2: 'Gujarat Titans', team2Img: 'static/gt.jpg', venue: 'Delhi' },
+    { date: 'MAY, MON 12', time: '7:30 pm IST', team1: 'Chennai Super Kings', team1Img: 'static/csk.jpg', team2: 'Rajasthan Royals', team2Img: 'static/rr.jpg', venue: 'Chennai' },
+    { date: 'MAY, TUE 13', time: '7:30 pm IST', team1: 'Royal Challengers Bengaluru', team1Img: 'static/rcb.jpg', team2: 'Sunrisers Hyderabad', team2Img: 'static/srh.jpg', venue: 'Bengaluru' },
+    { date: 'MAY, WED 14', time: '7:30 pm IST', team1: 'Gujarat Titans', team1Img: 'static/gt.jpg', team2: 'Lucknow Super Giants', team2Img: 'static/lsg.jpg', venue: 'Ahmedabad' },
+    { date: 'MAY, THU 15', time: '7:30 pm IST', team1: 'Mumbai Indians', team1Img: 'static/mi.jpg', team2: 'Delhi Capitals', team2Img: 'static/dc.jpg', venue: 'Mumbai' },
+    { date: 'MAY, FRI 16', time: '7:30 pm IST', team1: 'Rajasthan Royals', team1Img: 'static/rr.jpg', team2: 'Punjab Kings', team2Img: 'static/pk.jpg', venue: 'Jaipur' },
+    { date: 'MAY, SAT 17', time: '7:30 pm IST', team1: 'Royal Challengers Bengaluru', team1Img: 'static/rcb.jpg', team2: 'Kolkata Knight Riders', team2Img: 'static/kkr.jpg', venue: 'Bengaluru' },
+    { date: 'MAY, SUN 18', time: '3:30 pm IST', team1: 'Gujarat Titans', team1Img: 'static/gt.jpg', team2: 'Chennai Super Kings', team2Img: 'static/csk.jpg', venue: 'Ahmedabad' },
+    { date: 'MAY, SUN 18', time: '7:30 pm IST', team1: 'Lucknow Super Giants', team1Img: 'static/lsg.jpg', team2: 'Sunrisers Hyderabad', team2Img: 'static/srh.jpg', venue: 'Lucknow' },
+    { date: 'MAY, TUE 20', time: '7:30 pm IST', team1: 'TBD', team1Img: 'https://upload.wikimedia.org/wikipedia/en/2/2e/Sunrisers_Hyderabad_logo.png', team2: 'TBD', team2Img: 'https://upload.wikimedia.org/wikipedia/en/3/3e/Gujarat_Titans_logo.png', venue: 'Hydarabad' },
+    { date: 'MAY, WED 21', time: '3:30 pm IST', team1: 'TBD', team1Img: 'https://upload.wikimedia.org/wikipedia/en/0/0e/Rajasthan_Royals_logo.png', team2: 'TBD', team2Img: 'https://upload.wikimedia.org/wikipedia/en/5/5e/Lucknow_Super_Giants_logo.png', venue: 'Hydarabad' },
+    { date: 'MAY, FRI 23', time: '7:30 pm IST', team1: 'TBD', team1Img: 'https://upload.wikimedia.org/wikipedia/en/4/4e/Delhi_Capitals_logo.png', team2: 'TBD', team2Img: 'https://upload.wikimedia.org/wikipedia/en/1/1e/Kolkata_Knight_Riders_logo.png', venue: 'Kolkata' },
+    { date: 'MAY, SUN 25', time: '7:30 pm IST', team1: 'TBD', team1Img: 'https://upload.wikimedia.org/wikipedia/en/f/f9/Chennai_Super_Kings_logo.png', team2: 'TBD', team2Img: 'https://upload.wikimedia.org/wikipedia/en/9/9f/Mumbai_Indians_logo.png', venue: 'Kolkata' },
+];
+
+function displayMatches() {
+    const matchContainer = document.getElementById('matches-list');
+    matchContainer.innerHTML = '';
+
+    const monthMap = {
+        'JAN': 0, 'FEB': 1, 'MAR': 2, 'APR': 3,
+        'MAY': 4, 'JUN': 5, 'JUL': 6, 'AUG': 7,
+        'SEP': 8, 'OCT': 9, 'NOV': 10, 'DEC': 11
+    };
+
+    const today = new Date();
+    const endDate = new Date();
+    endDate.setDate(today.getDate() + 2);
+
+    matches.forEach(match => {
+        const [monthStr, , dayStr] = match.date.split(' ');
+        const month = monthMap[monthStr.replace(',', '')];
+        const day = parseInt(dayStr);
+        const matchDate = new Date(today.getFullYear(), month, day);
+
+        // Only include matches today or within the next 2 days
+        if (matchDate >= today && matchDate <= endDate) {
+            const matchElement = document.createElement('div');
+            matchElement.classList.add('match');
+            matchElement.innerHTML = `
+                <div>
+                    <div class="match-date">${match.date} - ${match.time}</div> 
+                    <div class="match-teams">
+                        <img src="${match.team1Img}" alt="${match.team1}" /> 
+                        <span>${match.team1}</span> vs 
+                        <img src="${match.team2Img}" alt="${match.team2}" />
+                        <span>${match.team2}</span>
+                    </div>
+                    <div class="match-venue">Venue: ${match.venue}</div>
+                </div>
+                <div>
+                    <button class="book-now">Book Now</button>
+                </div>
+            `;
+
+            const bookNowButton = matchElement.querySelector('.book-now');
+            bookNowButton.addEventListener('click', function () {
+                document.getElementById("info").style.display = "none";
+                document.getElementById("matches-section").style.display = "none";
+                document.getElementById("booking-container").classList.remove("hidden");
+
+                document.getElementById("booking-match-date").value = match.date;
+                document.getElementById("booking-match-time").value = match.time;
+                document.getElementById("booking-match-teams").value = `${match.team1} vs ${match.team2}`;
+                document.getElementById("booking-match-venue").value = match.venue;
+            });
+
+            matchContainer.appendChild(matchElement);
+        }
+    });
+}
+
+    document.getElementById("navbar").style.display = "flex";
+
+    // ✅ Ensure the background remains after login
+    document.body.style.background = 'url("static/back1.jpg") no-repeat center center fixed';
+    document.body.style.backgroundSize = "cover";
+
+
+    document.getElementById("booking-form").addEventListener("submit", function(event) {
+    event.preventDefault();
+    const name = document.getElementById("booking-name").value;
+    const matchInfo = document.getElementById("booking-match-info").value;
+    
+    // Here you can handle the booking logic (e.g., save to a database, etc.)
+    document.getElementById("booking-message").innerText = `Booking confirmed for ${name} for the match: ${matchInfo}`;
+    
+    // Optionally, clear the form
+    document.getElementById("booking-form").reset();
+});
+
+document.getElementById("back-to-matches").addEventListener("click", function() {
+    document.getElementById("info").style.display = "none";
+    document.getElementById("booking-container").classList.add("hidden");
+    document.getElementById("matches-section").style.display = "flex";
+});
+
+
+document.getElementById("show-matches").addEventListener("click", function() {
+    document.getElementById("info").style.display = "none";
+    document.getElementById("matches-section").style.display = "flex";
+    document.getElementById("about-us-container").classList.add("hidden"); // Hide About Us section
+    displayMatches(); // Call to display matches when the section is shown
+});
+
+
+
+
+document.querySelector('.navbar a[href=""]').addEventListener('click', function(event) {
+    event.preventDefault(); // Prevent default anchor behavior
+    document.getElementById("info").style.display = "none";
+    document.getElementById("matches-section").style.display = "none";
+    document.getElementById("booking-container").classList.add("hidden");
+    document.getElementById("ticket-display").style.display = "none";
+    document.getElementById("about-us-container").classList.remove("hidden"); // Show About Us section
+    
+});
+
+
+        document.getElementById("back-button").addEventListener("click", function() {
+    // Hide all sections
+    document.getElementById("info").style.display = "none";
+    document.getElementById("login-container").classList.add("hidden");
+    document.getElementById("register-container").classList.add("hidden");
+    document.getElementById("matches-section").style.display = "none";
+    document.getElementById("booking-container").classList.add("hidden");
+    document.getElementById("ticket-display").style.display = "none";
+    
+
+    // Show the login container by default
+    document.getElementById("login-container").classList.remove("hidden");
+});
+    </script>
+
+
+<script>
+    let selectedPrice = 0;
+
+// Event listener for seat selection buttons
+document.querySelectorAll('.seat-button').forEach((button) => {
+    button.addEventListener("click", function() {
+        selectedPrice = parseInt(this.value);
+        updateTotalPrice();
+        document.getElementById("qr-code-section").style.display = "block";
+        document.getElementById("confirm-booking").style.display = "block";
+    });
+});
+
+// Event listener for ticket quantity change
+document.getElementById("ticket-quantity").addEventListener("change", function() {
+    updateTotalPrice();
+});
+
+// Function to update the total price
+function updateTotalPrice() {
+    const quantity = document.getElementById("ticket-quantity").value;
+    const totalPrice = selectedPrice * quantity;
+    document.getElementById("seat-price").innerText = `Pay ₹${totalPrice}`;
+}
+
+
+   // Confirm booking and generate ticket
+   document.getElementById("confirm-booking").addEventListener("click", function() {
+    const name = document.getElementById("booking-name").value;
+    const quantity = document.getElementById("ticket-quantity").value; // Get selected quantity
+    document.getElementById("info").style.display = "none";
+    const matchDate = document.getElementById("booking-match-date").value;
+    const matchTime = document.getElementById("booking-match-time").value;
+    const matchTeams = document.getElementById("booking-match-teams").value;
+    const matchVenue = document.getElementById("booking-match-venue").value;
+
+    // Send booking data to the server
+    fetch('/book_ticket', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            name: name,
+            match_date: matchDate,
+            match_time: matchTime,
+            match_teams: matchTeams,
+            match_venue: matchVenue,
+            seat_price: selectedPrice * quantity, // Correctly calculate total price
+            quantity: quantity // Include quantity in the booking data
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message); // Show success message
+        // Show ticket details in table format
+        document.getElementById("ticket-name").innerText = name;
+        document.getElementById("ticket-match").innerText = `${matchDate} - ${matchTime}: ${matchTeams}`;
+        document.getElementById("ticket-venue").innerText = matchVenue;
+        document.getElementById("ticket-price").innerText = `Rs. ${selectedPrice * quantity}`; // Update price based on quantity
+        document.getElementById("ticket-display").style.display = "block"; // Show ticket display
+
+        // Hide booking container
+        document.getElementById("booking-container").classList.add("hidden");
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+});
+
+// Download ticket functionality
+document.getElementById("download-ticket").addEventListener("click", function() {
+    document.getElementById("info").style.display = "none";
+    const { jsPDF } = window.jspdf; // Access jsPDF from the window object
+    const doc = new jsPDF();
+
+    const name = document.getElementById("ticket-name").innerText;
+    const matchInfo = document.getElementById("ticket-match").innerText;
+    const venue = document.getElementById("ticket-venue").innerText;
+    const price = document.getElementById("ticket-price").innerText;
+
+    // Add content to the PDF
+    doc.setFontSize(20);
+    doc.text("Your Ticket", 20, 20);
+    doc.setFontSize(12);
+    doc.text(`Name: ${name}`, 20, 40);
+    doc.text(`Match: ${matchInfo}`, 20, 50);
+    doc.text(`Venue: ${venue}`, 20, 60);
+    doc.text(`Price: ${price}`, 20, 70);
+
+    // Save the PDF
+    doc.save("ticket.pdf");
+
+    window.location.href = '/getticket'
+
+});
+
+</script>
+
+</body>
+</html>
+

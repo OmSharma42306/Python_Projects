@@ -1,0 +1,65 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Successfully Sended Bill to Gmail.</h1>
+    
+    <a href="{{ url_for('back') }}"><button>Back</button></a>
+    
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* Dark mode background and text */
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+
+        h1 {
+            margin-bottom: 40px;
+        }
+
+        /* Big, colored button styling */
+        .big-button {
+            background-color: #1e88e5; /* blue */
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .big-button:hover {
+            background-color: #1565c0; /* darker blue on hover */
+        }
+
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Successfully Sent Bill to Gmail.</h1>
+    
+    <a href="{{ url_for('back') }}">
+        <button class="big-button">⬅ Back</button>
+    </a>
+</body>
+</html>

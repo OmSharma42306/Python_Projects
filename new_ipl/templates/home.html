@@ -1,0 +1,83 @@
+{% extends "base.html" %} {% block title %}Home - IPL Tickets{% endblock %} {%
+block content %}
+<!-- Your Carousel code from your message -->
+<div
+  id="carouselExampleIndicators"
+  class="carousel slide"
+  data-bs-ride="carousel"
+>
+  <!-- carousel indicators, items, and buttons exactly as you have pasted -->
+  <div class="carousel-indicators">
+    <button
+      type="button"
+      data-bs-target="#carouselExampleIndicators"
+      data-bs-slide-to="0"
+      class="active"
+      aria-current="true"
+      aria-label="Slide 1"
+    ></button>
+    <button
+      type="button"
+      data-bs-target="#carouselExampleIndicators"
+      data-bs-slide-to="1"
+      aria-label="Slide 2"
+    ></button>
+    <button
+      type="button"
+      data-bs-target="#carouselExampleIndicators"
+      data-bs-slide-to="2"
+      aria-label="Slide 3"
+    ></button>
+  </div>
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img
+        src="https://mir-s3-cdn-cf.behance.net/project_modules/fs/ef55b6219226969.67ae2f6ba9220.jpg"
+        class="d-block w-100"
+        alt="..."
+      />
+    </div>
+    <div class="carousel-item">
+      <img
+        src="https://mir-s3-cdn-cf.behance.net/project_modules/2800_opt_1/e63426221286803.67d1c2209a6e5.jpg"
+        class="d-block w-100"
+        alt="..."
+      />
+    </div>
+    <div class="carousel-item">
+      <img
+        src="https://media.gettyimages.com/id/2207445683/photo/2025-ipl-lucknow-super-giants-v-punjab-kings.jpg?s=2048x2048&w=gi&k=20&c=bWvezIo2IHi3cjQwc2gUgNVgWLxfCBT0kOcT9dvzaPU="
+        class="d-block w-100"
+        alt="..."
+      />
+    </div>
+    <div class="carousel-item">
+      <img
+        src="https://mir-s3-cdn-cf.behance.net/project_modules/fs/2bfa4f221286803.67d1c2209ac35.jpg"
+        class="d-block w-100"
+        alt="..."
+      />
+    </div>
+    
+
+  </div>
+  <button
+    class="carousel-control-prev"
+    type="button"
+    data-bs-target="#carouselExampleIndicators"
+    data-bs-slide="prev"
+  >
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button
+    class="carousel-control-next"
+    type="button"
+    data-bs-target="#carouselExampleIndicators"
+    data-bs-slide="next"
+  >
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+{% endblock %}
