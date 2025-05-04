@@ -463,7 +463,7 @@ function displayMatches() {
     };
 
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Important to ignore time part
+    today.setHours(0, 0, 0, 0); // Ignore time
 
     matches.forEach(match => {
         const [monthStr, , dayStr] = match.date.split(' ');
@@ -471,26 +471,31 @@ function displayMatches() {
         const day = parseInt(dayStr);
         const matchDate = new Date(today.getFullYear(), month, day);
 
-        if (matchDate >= today) { // ✅ Only check matchDate >= today
-            const matchElement = document.createElement('div');
-            matchElement.classList.add('match');
-            matchElement.innerHTML = `
-                <div>
-                    <div class="match-date">${match.date} - ${match.time}</div> 
-                    <div class="match-teams">
-                        <img src="${match.team1Img}" alt="${match.team1}" /> 
-                        <span>${match.team1}</span> vs 
-                        <img src="${match.team2Img}" alt="${match.team2}" />
-                        <span>${match.team2}</span>
-                    </div>
-                    <div class="match-venue">Venue: ${match.venue}</div>
-                </div>
-                <div>
-                    <button class="book-now">Book Now</button>
-                </div>
-            `;
+        const isUpcoming = matchDate >= today;
 
-            const bookNowButton = matchElement.querySelector('.book-now');
+        const matchElement = document.createElement('div');
+        matchElement.classList.add('match');
+
+        matchElement.innerHTML = `
+            <div>
+                <div class="match-date">${match.date} - ${match.time}</div> 
+                <div class="match-teams">
+                    <img src="${match.team1Img}" alt="${match.team1}" /> 
+                    <span>${match.team1}</span> vs 
+                    <img src="${match.team2Img}" alt="${match.team2}" />
+                    <span>${match.team2}</span>
+                </div>
+                <div class="match-venue">Venue: ${match.venue}</div>
+            </div>
+            <div>
+                <button class="book-now" ${!isUpcoming ? 'disabled' : ''} style="${!isUpcoming ? 'opacity: 0.5; cursor: not-allowed;' : ''}">
+                    Book Now
+                </button>
+            </div>
+        `;
+
+        const bookNowButton = matchElement.querySelector('.book-now');
+        if (isUpcoming) {
             bookNowButton.addEventListener('click', function () {
                 document.getElementById("info").style.display = "none";
                 document.getElementById("matches-section").style.display = "none";
@@ -501,11 +506,12 @@ function displayMatches() {
                 document.getElementById("booking-match-teams").value = `${match.team1} vs ${match.team2}`;
                 document.getElementById("booking-match-venue").value = match.venue;
             });
-
-            matchContainer.appendChild(matchElement);
         }
+
+        matchContainer.appendChild(matchElement);
     });
 }
+
 
 
 // radoo
