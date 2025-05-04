@@ -211,23 +211,13 @@ def book_ticket():
     conn.commit()
     conn.close()
 
-# PDF generation inside book_ticket
+    # PDF generation inside book_ticket
     ticket_width = 160 * mm
     ticket_height = 60 * mm
      # Create PDF ticket
     pdf_filename = f"{uuid.uuid4()}.pdf"
     pdf_path = os.path.join("temp_tickets", pdf_filename)
-    # c = canvas.Canvas(pdf_path)
-    # c.drawString(100, 750, f"Match Ticket for {name}")
-    # c.drawString(100, 730, f"Teams: {match_teams}")
-    # c.drawString(100, 710, f"Date: {match_date}")
-    # c.drawString(100, 690, f"Time: {match_time}")
-    # c.drawString(100, 670, f"Venue: {match_venue}")
-    # c.drawString(100, 650, f"Price: ₹{seat_price}")
-    # c.save()
-
-    # # Save path to session
-    # session['pdf_path'] = pdf_path
+    
     c = canvas.Canvas(pdf_path, pagesize=(ticket_width, ticket_height))
 
 # Background rectangle (ticket border)
