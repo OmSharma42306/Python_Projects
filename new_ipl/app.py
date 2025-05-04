@@ -245,10 +245,10 @@ def book_ticket():
     c.drawString(15 * mm, ticket_height - 38 * mm, f"Teams: {match_teams}")
     c.drawString(15 * mm, ticket_height - 46 * mm, f"Date: {match_date}")
     c.drawString(15 * mm, ticket_height - 54 * mm, f"Time: {match_time}")
-
+    print("price",seat_price)
 # Venue & Price
     c.drawString(90 * mm, ticket_height - 30 * mm, f"Venue: {match_venue}")
-    c.drawString(90 * mm, ticket_height - 38 * mm, f"Price: ₹{seat_price}")
+    c.drawString(90 * mm, ticket_height - 45 * mm, f"Price: ₹{seat_price}")
 
 # Footer line or barcode placeholder
     # c.setStrokeColor(colors.lightgrey)
