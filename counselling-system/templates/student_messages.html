@@ -2,17 +2,17 @@
 {% block title %}Messages Dashboard{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-  <h2 style="color: white;">My Messages</h2>
-  <button class="btn btn-danger btn-custom" onclick="window.location.href='/student_dashboard'">Back</button>
+  <h2 style="color: gold;">My Messages</h2>
+  <button class="btn btn-danger btn-custom" style="padding-left: 200;" onclick="window.location.href='/student_dashboard'">Back</button>
 </div>
 
 
 <ul>
   {% for message, reply, counsellor_name in messages %}
-    <li style="color: white;"><strong style="color: white;">To {{ counsellor_name }}:</strong>
-      <strong style="color: white;">{{ message }}</strong> <br>
-        <strong style="color: white;">Reply:</strong>
-        <strong style="color: white;">{{ reply or "No reply yet" }}</strong> 
+    <li style="color: black;"><strong style="color: darkcyan;">To {{ counsellor_name }}:</strong>
+      <strong style="color: green;">{{ message }}</strong> <br>
+        <strong style="color: darkcyan;">Reply:</strong>
+        <strong style="color: darkorange;">{{ reply or "No reply yet" }}</strong> 
         </li>
   {% endfor %}
 </ul>

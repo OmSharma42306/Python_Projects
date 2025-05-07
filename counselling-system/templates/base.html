@@ -3,12 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}Counselling Managment System{% endblock %}</title>
+  <title>{% block title %}Counselling Management System{% endblock %}</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {
       background-color: #f5f7fa;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
     }
     .navbar {
       background-color: #004d40 !important;
@@ -20,9 +22,6 @@
     }
     .navbar .nav-link:hover {
       color: #c8e6c9 !important;
-    }
-    .container {
-      margin-top: 30px;
     }
     .card {
       background-color: #ffffff;
@@ -43,29 +42,29 @@
     }
   </style>
 </head>
+<body>
 
-
-<nav class="navbar navbar-expand-lg navbar-light bg-light ">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="{{ url_for('home') }}">Counselling Managment Booking System</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-          <li class="nav-item"><a class="nav-link" href="{{ url_for('home') }}">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_login') }}">Admin</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{ url_for('user_login') }}">User</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{ url_for('counsellor_login') }}">Counsellor</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{ url_for('about') }}">About Us</a></li>
-        </ul>
-      </div>
+<!-- ✅ NAV inside body -->
+<nav class="navbar navbar-expand-lg">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{{ url_for('home') }}">Counselling Booking System</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('home') }}">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_login') }}">Admin</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('user_login') }}">Student</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('counsellor_login') }}">Counsellor</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('about') }}">About Us</a></li>
+      </ul>
     </div>
+  </div>
 </nav>
 
-<div class="container mt-3 ">
-  {% block content %}{% endblock %}
-</div>
+<!-- ✅ Removed margin-top container to let pages use full width -->
+{% block content %}{% endblock %}
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
 </body>

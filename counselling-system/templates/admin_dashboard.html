@@ -1,18 +1,18 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-  <h2 style="color:white;" class="mb-0">Welcome to Admin Dashboard</h2>
+  <h2 style="color:gold;" class="mb-0">Welcome to Admin Dashboard</h2>
   <button class="btn btn-danger btn-custom" onclick="window.location.href='/logout'">Logout</button>
 </div>
 
-<h2 style="color:white;">All Students</h2>
+<h2 style="color:skyblue;">All Students</h2>
 <ul class="list-group mb-4">
   {% for s in students %}
   <li class="list-group-item">{{ s[0] }} - {{ s[1] }} - {{ s[2] }}</li>
   {% endfor %}
 </ul>
 
-<h2 style="color:white;">All Counsellors</h2>
+<h2 style="color:skyblue;">All Counsellors</h2>
 <ul class="list-group">
   {% for c in counsellors %}
   <li class="list-group-item">{{ c[0] }} - {{ c[1] }} - {{ c[2] }}</li>
