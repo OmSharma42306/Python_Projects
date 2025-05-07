@@ -26,7 +26,8 @@ def init_db():
         name TEXT NOT NULL,
         email TEXT NOT NULL,
         password TEXT NOT NULL,
-        specialization TEXT NOT NULL
+        specialization TEXT NOT NULL,
+        bio TEXT NOT NULL
     )
 ''')
 
@@ -41,18 +42,19 @@ def init_db():
     )
 ''')
 
-# # Insert fixed counsellors (only run once)
-#     cursor.execute("SELECT COUNT(*) FROM counsellors")
-#     if cursor.fetchone()[0] == 0:
-#             counsellor_data = [
-#         ("Alice", "alice@counsel.com", "123", "Academic"),
-#         ("Bob", "bob@counsel.com", "123", "Career"),
-#         ("Carol", "carol@counsel.com", "123", "Personal"),
-#         ("Dave", "dave@counsel.com", "123", "Health"),
-#         ("Eve", "eve@counsel.com", "123", "Financial")
-#     ]
-#     cursor.executemany("INSERT INTO counsellors (name, email, password, specialization) VALUES (?, ?, ?, ?)", counsellor_data)
+# Insert fixed counsellors (only run once)
+    cursor.execute("SELECT COUNT(*) FROM counsellors")
+    # if cursor.fetchone()[0] == 0:
+    #         counsellor_data = [
+    #     ("Alice", "alice@counsel.com", "123", "Academic","Helping students navigate Academic challenges with empathy and expertise."),
+    #     ("Bob", "bob@counsel.com", "123", "Career","Helping students navigate Career challenges with empathy and expertise."),
+    #     ("Carol", "carol@counsel.com", "123", "Personal","Helping students navigate Personal challenges with empathy and expertise."),
+    #     ("Dave", "dave@counsel.com", "123", "Health","Helping students navigate Health challenges with empathy and expertise."),
+    #     ("Eve", "eve@counsel.com", "123", "Financial","Helping students navigate Financial challenges with empathy and expertise.")
+    # ]
+    # cursor.executemany("INSERT INTO counsellors (name, email, password, specialization,bio) VALUES (?, ?, ?, ?,?)", counsellor_data)
 
+    #cursor.execute('ALTER TABLE counsellors ADD COLUMN bio TEXT')  # Run only once
 
 
     conn.commit()
@@ -198,8 +200,10 @@ def counsellor_login():
 def select_counsellor():
     conn = sqlite3.connect('counsellors.db')
     cursor = conn.cursor()
-    cursor.execute('SELECT id, name, specialization FROM counsellors')
+    cursor.execute('SELECT id, name, email,specialization,bio FROM counsellors')
+
     counsellors = cursor.fetchall()
+    print(counsellors)
     conn.close()
     return render_template('select_counsellor.html', counsellors=counsellors)
 
