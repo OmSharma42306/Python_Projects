@@ -1,16 +1,28 @@
 {% extends "base.html" %}
 {% block content %}
-
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h2 style="color:white;">Select Counsellor</h2>
-    <button class="btn btn-danger btn-custom" onclick="window.location.href='/student_dashboard'">Back</button>
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-white">Meet Our Counsellors</h2>
+    <a class="btn btn-danger" href="{{ url_for('student_dashboard') }}">← Back</a>
   </div>
-<ul class="list-group">
+
+  <div class="row">
     {% for c in counsellors %}
-    <li class="list-group-item">
-        {{ c[1] }} ({{ c[2] }})
-        <a href="{{ url_for('send_message', counsellor_id=c[0]) }}" class="btn btn-sm btn-primary float-end">Send Message</a>
-    </li>
+    <div class="col-md-6 col-lg-4 mb-4">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <h5 class="card-title">{{ c[1] }}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{ c[3] }} Counsellor</h6>
+          <p class="card-text">
+            <strong>Email:</strong> {{ c[2] }}<br>
+            <strong>Experience:</strong> 5+ years<br>
+            <strong>Bio:</strong> Helping students navigate {{ c[3]|lower }} challenges with empathy and expertise.
+          </p>
+          <a href="{{ url_for('send_message', counsellor_id=c[0]) }}" class="btn btn-primary btn-sm">Send Message</a>
+        </div>
+      </div>
+    </div>
     {% endfor %}
-</ul>
+  </div>
+</div>
 {% endblock %}

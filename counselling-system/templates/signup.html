@@ -4,27 +4,27 @@
 
 {% block content %}
 <div class="container">
-  <h2 style="color: white;">Student Signup</h2>
+  <h2 style="color: gold;">Student Signup</h2>
   {% if error %}
   <div class="alert alert-danger">{{ error }}</div>
   {% endif %}
   <form method="POST" action="/signup">
     <div class="mb-3">
-        <label class="form-label" style="color: white;">Name</label>
+        <label class="form-label" style="color:black;">Name</label>
         <input type="text" class="form-control" placeholder="Name" name="name" required>
       </div>
 
 
     <div class="mb-3">
-      <label class="form-label" style="color: white;">Username</label>
-      <input type="text" class="form-control" name="email" required>
+      <label class="form-label" style="color: black;">Username</label>
+      <input type="text" class="form-control" name="email" placeholder="Email" required>
     </div>
     <div class="mb-3">
-        <label class="form-label" style="color: white;">Phone</label>
-        <input type="text" class="form-control" name="phone" required>
+        <label class="form-label" style="color: black;">Phone</label>
+        <input type="text" class="form-control" name="phone" placeholder="Mobile Number" required>
       </div>
     <div class="mb-3">
-      <label class="form-label" style="color: white;">Password</label>
+      <label class="form-label" style="color: black;">Password</label>
       <input type="password" class="form-control" name="password" required>
     </div>
     
