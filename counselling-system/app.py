@@ -41,6 +41,16 @@ def init_db():
         timestamp TEXT
     )
 ''')
+    
+    cursor.execute('''
+CREATE TABLE IF NOT EXISTS bookings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    student_id INTEGER NOT NULL,
+    counsellor_id INTEGER NOT NULL,
+    timestamp TEXT NOT NULL
+)
+''')
+
 
 # Insert fixed counsellors (only run once)
     cursor.execute("SELECT COUNT(*) FROM counsellors")
@@ -55,6 +65,14 @@ def init_db():
     # cursor.executemany("INSERT INTO counsellors (name, email, password, specialization,bio) VALUES (?, ?, ?, ?,?)", counsellor_data)
 
     #cursor.execute('ALTER TABLE counsellors ADD COLUMN bio TEXT')  # Run only once
+    cursor.execute("PRAGMA table_info(counsellors)")
+    columns = [column[1] for column in cursor.fetchall()]
+
+    if 'gender' not in columns:
+        cursor.execute("ALTER TABLE counsellors ADD COLUMN gender TEXT")
+
+    if 'experience' not in columns:
+        cursor.execute("ALTER TABLE counsellors ADD COLUMN experience TEXT")
 
 
     conn.commit()
@@ -103,6 +121,29 @@ def admin_dashboard():
 @app.route('/view_bookings')
 def view_bookings():
     return "Booking view under construction."
+
+
+@app.route('/book_call/<int:counsellor_id>')
+def book_call(counsellor_id):
+    if 'user_email' not in session:
+        return redirect(url_for('user_login'))
+
+    student_email = session['user_email']
+    conn = sqlite3.connect('counsellors.db')
+    cursor = conn.cursor()
+
+    cursor.execute('SELECT id FROM users WHERE email = ?', (student_email,))
+    student_id = cursor.fetchone()[0]
+    timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
+
+    cursor.execute('''
+        INSERT INTO bookings (student_id, counsellor_id, timestamp)
+        VALUES (?, ?, ?)
+    ''', (student_id, counsellor_id, timestamp))
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for('select_counsellor'))
 
 
 
@@ -229,8 +270,8 @@ def send_message(counsellor_id):
     
     return render_template('send_message.html', counsellor_id=counsellor_id)
 
-@app.route('/counsellor_dashboard', methods=['GET', 'POST'])
-def counsellor_dashboard():
+# @app.route('/counsellor_dashboard', methods=['GET', 'POST'])
+# def counsellor_dashboard():
     if 'counsellor_id' not in session:
         return redirect(url_for('counsellor_login'))
 
@@ -245,6 +286,120 @@ def counsellor_dashboard():
     data = cursor.fetchall()
     conn.close()
     return render_template('counsellor_dashboard.html', messages=data)
+
+
+@app.route('/counsellor_dashboard', methods=['GET', 'POST'])
+def counsellor_dashboard():
+    if 'counsellor_id' not in session:
+        return redirect(url_for('counsellor_login'))
+
+    conn = sqlite3.connect('counsellors.db')
+    cursor = conn.cursor()
+
+    # Fetch messages
+    cursor.execute('''
+        SELECT messages.id, users.name, messages.message, messages.reply
+        FROM messages
+        JOIN users ON messages.student_id = users.id
+        WHERE messages.counsellor_id = ?
+    ''', (session['counsellor_id'],))
+    data = cursor.fetchall()
+    print("fef",data)
+    # Fetch bookings
+    cursor.execute('''
+        SELECT users.name, users.email, bookings.timestamp
+        FROM bookings
+        JOIN users ON bookings.student_id = users.id
+        WHERE bookings.counsellor_id = ?
+    ''', (session['counsellor_id'],))
+    bookings = cursor.fetchall()
+    # In counsellor_dashboard route, after fetching messages and bookings
+    cursor.execute('SELECT bio FROM counsellors WHERE id = ?', (session['counsellor_id'],))
+    bio_row = cursor.fetchone()
+    bio = bio_row[0] if bio_row else ''
+    print("Hi",bookings)
+    conn.close()
+    return render_template('counsellor_dashboard.html', messages=data, bookings=bookings,counsellor_bio=bio)
+
+# @app.route('/update_bio', methods=['POST'])
+# def update_bio():
+#     if 'counsellor_id' not in session:
+#         return redirect(url_for('counsellor_login'))
+    
+#     new_bio = request.form['bio']
+#     conn = sqlite3.connect('counsellors.db')
+#     cursor = conn.cursor()
+#     cursor.execute('UPDATE counsellors SET bio = ? WHERE id = ?', (new_bio, session['counsellor_id']))
+#     conn.commit()
+#     conn.close()
+#     return redirect(url_for('counsellor_dashboard'))
+
+
+# @app.route('/profile', methods=['GET'])
+# def counsellor_profile():
+#     if 'counsellor_id' not in session:
+#         return redirect(url_for('counsellor_login'))
+    
+#     conn = sqlite3.connect('counsellors.db')
+#     cursor = conn.cursor()
+#     cursor.execute('SELECT bio FROM counsellors WHERE id = ?', (session['counsellor_id'],))
+#     bio_row = cursor.fetchone()
+#     conn.close()
+    
+#     bio = bio_row[0] if bio_row else ''
+#     return render_template('counsellor_profile.html', counsellor_bio=bio)
+
+@app.route('/profile', methods=['GET'])
+def counsellor_profile():
+    if 'counsellor_id' not in session:
+        return redirect(url_for('counsellor_login'))
+
+    conn = sqlite3.connect('counsellors.db')
+    cursor = conn.cursor()
+    cursor.execute('SELECT bio, gender, experience FROM counsellors WHERE id = ?', (session['counsellor_id'],))
+    row = cursor.fetchone()
+    conn.close()
+
+    bio = row[0] if row else ''
+    gender = row[1] if row else ''
+    experience = row[2] if row else ''
+
+    return render_template('counsellor_profile.html', counsellor_bio=bio, gender=gender, experience=experience)
+
+
+# @app.route('/update_bio', methods=['POST'])
+# def update_bio():
+#     if 'counsellor_id' not in session:
+#         return redirect(url_for('counsellor_login'))
+
+#     new_bio = request.form['bio']
+#     conn = sqlite3.connect('counsellors.db')
+#     cursor = conn.cursor()
+#     cursor.execute('UPDATE counsellors SET bio = ? WHERE id = ?', (new_bio, session['counsellor_id']))
+#     conn.commit()
+#     conn.close()
+#     return redirect(url_for('counsellor_profile'))
+
+@app.route('/update_bio', methods=['POST'])
+def update_bio():
+    if 'counsellor_id' not in session:
+        return redirect(url_for('counsellor_login'))
+
+    new_bio = request.form['bio']
+    gender = request.form['gender']
+    experience = request.form['experience']
+
+    conn = sqlite3.connect('counsellors.db')
+    cursor = conn.cursor()
+    cursor.execute('''
+        UPDATE counsellors SET bio = ?, gender = ?, experience = ?
+        WHERE id = ?
+    ''', (new_bio, gender, experience, session['counsellor_id']))
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for('counsellor_profile'))
+
 
 
 @app.route('/reply_message/<int:message_id>', methods=['POST'])

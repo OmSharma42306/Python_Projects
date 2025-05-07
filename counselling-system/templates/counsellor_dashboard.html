@@ -1,25 +1,80 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h2 style="color:white;" class="mb-0">Welcome to Counsellor Dashboard</h2>
-    <button class="btn btn-danger btn-custom" onclick="window.location.href='/logout'">Logout</button>
-  </div>
+<div class="d-flex">
+    <!-- Sidebar -->
+    <div class="bg-dark text-white p-3" style="width: 220px; min-height: 100vh;">
+        <h4>Dashboard</h4>
+        <hr>
+        <ul class="nav flex-column">
+            <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="#messages">📩 Messages</a>
+            </li>
+            <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="#bookings">📅 Bookings</a>
+            </li>
+            <li class="nav-item mb-2">
+                <a class="nav-link text-white" href="{{ url_for('counsellor_profile') }}">👤 Profile</a>
 
-<h3 style="color:white;">Messages from Students</h3>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link text-danger" href="/logout">🚪 Logout</a>
+            </li>
+        </ul>
+    </div>
 
-{% for m in messages %}
-<div class="card mb-2">
-    <div class="card-body">
-        <h5 class="card-title">{{ m[1] }}</h5>
-        <p class="card-text"><strong>Message:</strong> {{ m[2] }}</p>
-        <p><strong>Reply:</strong> {{ m[3] if m[3] else "No reply yet." }}</p>
-        {% if not m[3] %}
-        <form method="post" action="{{ url_for('reply_message', message_id=m[0]) }}">
-            <textarea name="reply" class="form-control" required></textarea><br>
-            <button type="submit" class="btn btn-sm btn-primary">Reply</button>
-        </form>
+    <!-- Main Content -->
+    <div class="flex-grow-1 p-4">
+
+        <h2 style="color:white;" class="mb-4">Welcome to Counsellor Dashboard</h2>
+
+        <h3 id="messages" style="color:saddlebrown;">📩 Messages from Students</h3>
+        {% for m in messages %}
+        <div class="card mb-2">
+            <div class="card-body">
+                <h5 class="card-title">{{ m[1] }}</h5>
+                <p class="card-text"><strong>Message:</strong> {{ m[2] }}</p>
+                <p><strong>Reply:</strong> {{ m[3] if m[3] else "No reply yet." }}</p>
+                {% if not m[3] %}
+                <form method="post" action="{{ url_for('reply_message', message_id=m[0]) }}">
+                    <textarea name="reply" class="form-control" required></textarea><br>
+                    <button type="submit" class="btn btn-sm btn-primary">Reply</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+
+        <hr>
+
+        <h3 id="bookings" style="color:saddlebrown;" class="mt-4">📅 Booked Calls</h3>
+        {% if bookings %}
+        <table class="table table-bordered bg-white text-dark mt-3">
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Email</th>
+                    <th>Booked Time</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for b in bookings %}
+                <tr>
+                    <td>{{ b[0] }}</td>
+                    <td>{{ b[1] }}</td>
+                    <td>{{ b[2] }}</td>
+                    <td><a href="#" class="btn btn-sm btn-success disabled">📞 Schedule Call</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="text-white">No bookings yet.</p>
         {% endif %}
+
+        
+
     </div>
 </div>
-{% endfor %}
 {% endblock %}
