@@ -1,6 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for, session,jsonify
+from flask import Flask, render_template, request, redirect, url_for, session,jsonify,flash
 import sqlite3
 import time
+import smtplib
+from email.mime.text import MIMEText
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Needed for session management
@@ -65,6 +67,9 @@ CREATE TABLE IF NOT EXISTS bookings (
     # cursor.executemany("INSERT INTO counsellors (name, email, password, specialization,bio) VALUES (?, ?, ?, ?,?)", counsellor_data)
 
     #cursor.execute('ALTER TABLE counsellors ADD COLUMN bio TEXT')  # Run only once
+    
+    #cursor.execute('ALTER TABLE bookings ADD COLUMN scheduled_time TEXT')  # Run only once
+
     cursor.execute("PRAGMA table_info(counsellors)")
     columns = [column[1] for column in cursor.fetchall()]
 
@@ -87,6 +92,30 @@ ADMIN_PASSWORD = "xyz"
 @app.route('/')
 def home():
     return render_template('home.html')
+
+
+import smtplib
+from email.mime.text import MIMEText
+
+def send_email(to_email, subject, body):
+    from_email = "codingwithak6@gmail.com"
+    from_password = "didr yqlz bhwe gjwi"
+
+    msg = MIMEText(body)
+    msg['Subject'] = subject
+    msg['From'] = from_email
+    msg['To'] = to_email
+
+    try:
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        server.login(from_email, from_password)
+        server.sendmail(from_email, [to_email], msg.as_string())
+        server.quit()
+    except Exception as e:
+        print("Email failed:", e)
+
+
 
 @app.route('/admin_login', methods=['GET', 'POST'])
 def admin_login():
@@ -128,12 +157,15 @@ def book_call(counsellor_id):
     if 'user_email' not in session:
         return redirect(url_for('user_login'))
 
+    print("i am here")
     student_email = session['user_email']
+    print("pmy",student_email)
     conn = sqlite3.connect('counsellors.db')
     cursor = conn.cursor()
 
     cursor.execute('SELECT id FROM users WHERE email = ?', (student_email,))
     student_id = cursor.fetchone()[0]
+    print(student_id)
     timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
 
     cursor.execute('''
@@ -241,12 +273,51 @@ def counsellor_login():
 def select_counsellor():
     conn = sqlite3.connect('counsellors.db')
     cursor = conn.cursor()
-    cursor.execute('SELECT id, name, email,specialization,bio FROM counsellors')
+    cursor.execute('SELECT id, name, email,specialization,bio,gender,experience FROM counsellors')
 
     counsellors = cursor.fetchall()
     print(counsellors)
     conn.close()
     return render_template('select_counsellor.html', counsellors=counsellors)
+
+
+
+@app.route('/schedule_call/<int:booking_id>', methods=['GET', 'POST'])
+def schedule_call_form(booking_id):
+    conn = sqlite3.connect('counsellors.db')
+    c = conn.cursor()
+
+    # Get student email and name from booking
+    c.execute("SELECT student_id FROM bookings WHERE id = ?", (booking_id,))
+    booking = c.fetchone()
+    print("kk",booking[0])
+    
+    c.execute("SELECT email FROM users WHERE id = ?",(booking[0],))
+    studentemail = c.fetchone()
+    print("SSSSSS",studentemail[0])
+    print("email",studentemail)
+    if request.method == 'POST':
+        date = request.form['date']
+        time = request.form['time']
+        scheduled_datetime = f"{date} {time}"
+
+        # Save the schedule info in DB (you may add a new column or new table)
+        c.execute("UPDATE bookings SET scheduled_time = ? WHERE id = ?", (scheduled_datetime, booking_id))
+        conn.commit()
+        conn.close()
+
+        # Send email to student
+        send_email(
+            to_email=studentemail[0],
+            subject="Your Call Has Been Scheduled",
+            body=f"Hi {studentemail[0]},\n\nYour call has been scheduled on {scheduled_datetime}.\n\nThank you!"
+        )
+
+        flash("Call scheduled and student notified by email.", "success")
+        return redirect(url_for('counsellor_dashboard'))
+
+    return render_template('schedule_call.html', booking_id=booking_id, student=booking)
+
 
 
 @app.route('/send_message/<int:counsellor_id>', methods=['GET', 'POST'])
@@ -307,12 +378,13 @@ def counsellor_dashboard():
     print("fef",data)
     # Fetch bookings
     cursor.execute('''
-        SELECT users.name, users.email, bookings.timestamp
+        SELECT users.name, users.email, bookings.timestamp,bookings.id
         FROM bookings
         JOIN users ON bookings.student_id = users.id
         WHERE bookings.counsellor_id = ?
     ''', (session['counsellor_id'],))
     bookings = cursor.fetchall()
+    print("BOKKING",bookings)
     # In counsellor_dashboard route, after fetching messages and bookings
     cursor.execute('SELECT bio FROM counsellors WHERE id = ?', (session['counsellor_id'],))
     bio_row = cursor.fetchone()

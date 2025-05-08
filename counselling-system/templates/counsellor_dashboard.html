@@ -64,7 +64,8 @@
                     <td>{{ b[0] }}</td>
                     <td>{{ b[1] }}</td>
                     <td>{{ b[2] }}</td>
-                    <td><a href="#" class="btn btn-sm btn-success disabled">📞 Schedule Call</a></td>
+                    <td><a href="{{ url_for('schedule_call_form', booking_id=b[3]) }}" class="btn btn-sm btn-success">📞 Schedule Call</a></td>
+
                 </tr>
                 {% endfor %}
             </tbody>
