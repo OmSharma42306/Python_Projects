@@ -1,21 +1,42 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <h2 style="color:gold;" class="mb-0">Welcome to Admin Dashboard</h2>
-  <button class="btn btn-danger btn-custom" onclick="window.location.href='/logout'">Logout</button>
+<div class="d-flex">
+  <!-- Sidebar -->
+  <div class="bg-light p-3 border-end" style="width: 220px; min-height: 100vh;">
+    <h4 class="text-primary">Admin Panel</h4>
+    <hr>
+    <ul class="nav flex-column">
+      <li class="nav-item mb-2">
+        <a class="nav-link text-dark" href="#students">🎓 Students</a>
+      </li>
+      <li class="nav-item mb-2">
+        <a class="nav-link text-dark" href="#counsellors">🧑‍💼 Counsellors</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-danger" href="/logout">🚪 Logout</a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Main Content -->
+  <div class="flex-grow-1 p-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2 style="color:gold;" class="mb-0">Welcome to Admin Dashboard</h2>
+    </div>
+
+    <h2 id="students" style="color:skyblue;">🎓 All Students</h2>
+    <ul class="list-group mb-4">
+      {% for s in students %}
+      <li class="list-group-item">{{ s[0] }} - {{ s[1] }} - {{ s[2] }}</li>
+      {% endfor %}
+    </ul>
+
+    <h2 id="counsellors" style="color:skyblue;">🧑‍💼 All Counsellors</h2>
+    <ul class="list-group">
+      {% for c in counsellors %}
+      <li class="list-group-item">{{ c[0] }} - {{ c[1] }} - {{ c[2] }}</li>
+      {% endfor %}
+    </ul>
+  </div>
 </div>
-
-<h2 style="color:skyblue;">All Students</h2>
-<ul class="list-group mb-4">
-  {% for s in students %}
-  <li class="list-group-item">{{ s[0] }} - {{ s[1] }} - {{ s[2] }}</li>
-  {% endfor %}
-</ul>
-
-<h2 style="color:skyblue;">All Counsellors</h2>
-<ul class="list-group">
-  {% for c in counsellors %}
-  <li class="list-group-item">{{ c[0] }} - {{ c[1] }} - {{ c[2] }}</li>
-  {% endfor %}
-</ul>
 {% endblock %}

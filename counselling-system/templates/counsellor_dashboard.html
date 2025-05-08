@@ -2,18 +2,18 @@
 {% block content %}
 <div class="d-flex">
     <!-- Sidebar -->
-    <div class="bg-dark text-white p-3" style="width: 220px; min-height: 100vh;">
+    <div class="bg-light p-3 border-end" style="width: 220px; min-height: 100vh;">
         <h4>Dashboard</h4>
         <hr>
         <ul class="nav flex-column">
             <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="#messages">📩 Messages</a>
+                <a class="nav-link text-dark" href="#messages">📩 Messages</a>
             </li>
             <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="#bookings">📅 Bookings</a>
+                <a class="nav-link text-dark" href="#bookings">📅 Bookings</a>
             </li>
             <li class="nav-item mb-2">
-                <a class="nav-link text-white" href="{{ url_for('counsellor_profile') }}">👤 Profile</a>
+                <a class="nav-link text-dark" href="{{ url_for('counsellor_profile') }}">👤 Profile</a>
 
             </li>
             
@@ -26,7 +26,7 @@
     <!-- Main Content -->
     <div class="flex-grow-1 p-4">
 
-        <h2 style="color:white;" class="mb-4">Welcome to Counsellor Dashboard</h2>
+        <h2 style="color:firebrick;" class="mb-4">Welcome to Counsellor Dashboard</h2>
 
         <h3 id="messages" style="color:saddlebrown;">📩 Messages from Students</h3>
         {% for m in messages %}

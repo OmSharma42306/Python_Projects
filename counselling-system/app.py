@@ -316,7 +316,7 @@ def schedule_call_form(booking_id):
         flash("Call scheduled and student notified by email.", "success")
         return redirect(url_for('counsellor_dashboard'))
 
-    return render_template('schedule_call.html', booking_id=booking_id, student=booking)
+    return render_template('schedule_call.html', booking_id=booking_id, student=studentemail)
 
 
 
