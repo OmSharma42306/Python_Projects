@@ -4,6 +4,7 @@ import time
 import smtplib
 from email.mime.text import MIMEText
 
+
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Needed for session management
 
@@ -94,8 +95,6 @@ def home():
     return render_template('home.html')
 
 
-import smtplib
-from email.mime.text import MIMEText
 
 def send_email(to_email, subject, body):
     from_email = "codingwithak6@gmail.com"
@@ -157,9 +156,9 @@ def book_call(counsellor_id):
     if 'user_email' not in session:
         return redirect(url_for('user_login'))
 
-    print("i am here")
+    
     student_email = session['user_email']
-    print("pmy",student_email)
+    
     conn = sqlite3.connect('counsellors.db')
     cursor = conn.cursor()
 
@@ -288,14 +287,16 @@ def schedule_call_form(booking_id):
     c = conn.cursor()
 
     # Get student email and name from booking
-    c.execute("SELECT student_id FROM bookings WHERE id = ?", (booking_id,))
+    c.execute("SELECT student_id,counsellor_id FROM bookings WHERE id = ?", (booking_id,))
     booking = c.fetchone()
-    print("kk",booking[0])
+    print(booking)
     
     c.execute("SELECT email FROM users WHERE id = ?",(booking[0],))
     studentemail = c.fetchone()
-    print("SSSSSS",studentemail[0])
-    print("email",studentemail)
+
+    c.execute("SELECT name FROM counsellors WHERE id = ?",(booking[1],))
+    counsellorData = c.fetchone()
+    print(counsellorData)
     if request.method == 'POST':
         date = request.form['date']
         time = request.form['time']
@@ -310,7 +311,7 @@ def schedule_call_form(booking_id):
         send_email(
             to_email=studentemail[0],
             subject="Your Call Has Been Scheduled",
-            body=f"Hi {studentemail[0]},\n\nYour call has been scheduled on {scheduled_datetime}.\n\nThank you!"
+            body=f"Hi {studentemail[0]},\n\nYour call has been scheduled on {scheduled_datetime} by {counsellorData[0]}.\n\nThank you!"
         )
 
         flash("Call scheduled and student notified by email.", "success")
@@ -341,22 +342,7 @@ def send_message(counsellor_id):
     
     return render_template('send_message.html', counsellor_id=counsellor_id)
 
-# @app.route('/counsellor_dashboard', methods=['GET', 'POST'])
-# def counsellor_dashboard():
-    if 'counsellor_id' not in session:
-        return redirect(url_for('counsellor_login'))
 
-    conn = sqlite3.connect('counsellors.db')
-    cursor = conn.cursor()
-    cursor.execute('''
-        SELECT messages.id, users.name, messages.message, messages.reply
-        FROM messages
-        JOIN users ON messages.student_id = users.id
-        WHERE messages.counsellor_id = ?
-    ''', (session['counsellor_id'],))
-    data = cursor.fetchall()
-    conn.close()
-    return render_template('counsellor_dashboard.html', messages=data)
 
 
 @app.route('/counsellor_dashboard', methods=['GET', 'POST'])
@@ -393,33 +379,7 @@ def counsellor_dashboard():
     conn.close()
     return render_template('counsellor_dashboard.html', messages=data, bookings=bookings,counsellor_bio=bio)
 
-# @app.route('/update_bio', methods=['POST'])
-# def update_bio():
-#     if 'counsellor_id' not in session:
-#         return redirect(url_for('counsellor_login'))
-    
-#     new_bio = request.form['bio']
-#     conn = sqlite3.connect('counsellors.db')
-#     cursor = conn.cursor()
-#     cursor.execute('UPDATE counsellors SET bio = ? WHERE id = ?', (new_bio, session['counsellor_id']))
-#     conn.commit()
-#     conn.close()
-#     return redirect(url_for('counsellor_dashboard'))
 
-
-# @app.route('/profile', methods=['GET'])
-# def counsellor_profile():
-#     if 'counsellor_id' not in session:
-#         return redirect(url_for('counsellor_login'))
-    
-#     conn = sqlite3.connect('counsellors.db')
-#     cursor = conn.cursor()
-#     cursor.execute('SELECT bio FROM counsellors WHERE id = ?', (session['counsellor_id'],))
-#     bio_row = cursor.fetchone()
-#     conn.close()
-    
-#     bio = bio_row[0] if bio_row else ''
-#     return render_template('counsellor_profile.html', counsellor_bio=bio)
 
 @app.route('/profile', methods=['GET'])
 def counsellor_profile():
@@ -439,18 +399,6 @@ def counsellor_profile():
     return render_template('counsellor_profile.html', counsellor_bio=bio, gender=gender, experience=experience)
 
 
-# @app.route('/update_bio', methods=['POST'])
-# def update_bio():
-#     if 'counsellor_id' not in session:
-#         return redirect(url_for('counsellor_login'))
-
-#     new_bio = request.form['bio']
-#     conn = sqlite3.connect('counsellors.db')
-#     cursor = conn.cursor()
-#     cursor.execute('UPDATE counsellors SET bio = ? WHERE id = ?', (new_bio, session['counsellor_id']))
-#     conn.commit()
-#     conn.close()
-#     return redirect(url_for('counsellor_profile'))
 
 @app.route('/update_bio', methods=['POST'])
 def update_bio():
@@ -494,25 +442,6 @@ def book_session():
 @app.route('/about')
 def about():
     return render_template('about.html')
-
-# @app.route('/signup',methods=['GET', 'POST'])
-# def signup():
-#     if request.method == 'POST':
-#         name = request.form['name']
-#         email = request.form['email']
-#         phone = request.form['phone']
-#         password = request.form['password']
-#         print(name,email)
-#         conn = sqlite3.connect('counsellors.db')
-#         cursor = conn.cursor()
-#         cursor.execute('''
-#             INSERT INTO users (name, email, phone, password)
-#             VALUES (?, ?, ?, ?)
-#         ''', (name, email, phone, password))
-#         conn.commit()
-#         conn.close()
-#         return render_template('user_login.html',msg='Signup successful!')
-#     return render_template('signup.html')
 
 
 @app.route('/signup', methods=['GET', 'POST'])
