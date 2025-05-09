@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Student Dashboard{% endblock %}
+
+{% block content %}
+<!-- Full-height flex layout -->
+<div class="container-fluid p-0">
+  <div class="d-flex" style="height: calc(100vh - 56px);"> <!-- 56px is Bootstrap navbar height -->
+
+    <!-- Sidebar -->
+    <div class=" text-white p-3" style="background-color: green; width: 250px;">
+      <h4 class="text-center mb-4" style="color: wheat;">Student Panel</h4>
+      <ul class="nav flex-column">
+        <li class="nav-item mb-2">
+          <a class="nav-link text-white" href="{{ url_for('select_counsellor') }}">🧭 Ask Guidance & Queries</a>
+        </li>
+        <li class="nav-item mb-2">
+          <a class="nav-link text-white" href="{{ url_for('student_messages') }}">💬 View Messages</a>
+        </li>
+        <!-- <li class="nav-item mb-2">
+          <a class="nav-link text-white" href="{{ url_for('view_bookings') }}">📅 My Bookings</a>
+        </li> -->
+        <li class="nav-item mt-4">
+          <a class="btn btn-outline-danger w-100" href="{{ url_for('logout') }}">🚪 Logout</a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-grow-2 p-5 bg-light">
+      <h2 class="mb-4">Welcome, <span class="text-primary">{{ session['user_email'] }}</span></h2>
+      <p class="lead">What would you like to do today?</p>
+       </div>
+       <div style="  padding-top: 150px;">
+        <img src="https://img.freepik.com/premium-vector/student-gir%E2%80%A6k-hand-gesture-cartoon-illustration_73842-800.jpg" alt="">
+      </div>
+    
+
+  </div>
+</div>
+{% endblock %}

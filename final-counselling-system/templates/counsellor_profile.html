@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+
+<form method="post" action="{{ url_for('update_bio') }}">
+    <div class="mb-3">
+        <label for="bio" class="form-label">Your Bio</label>
+        <textarea id="bio" name="bio" class="form-control" rows="5" required>{{ counsellor_bio }}</textarea>
+    </div>
+
+    <div class="mb-3">
+        <label for="gender" class="form-label">Gender</label>
+        <select id="gender" name="gender" class="form-control">
+            <option value="Male" {% if gender == 'Male' %}selected{% endif %}>Male</option>
+            <option value="Female" {% if gender == 'Female' %}selected{% endif %}>Female</option>
+            <option value="Other" {% if gender == 'Other' %}selected{% endif %}>Other</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="experience" class="form-label">Experience (e.g., 5 years)</label>
+        <input type="text" id="experience" name="experience" class="form-control" value="{{ experience }}">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update Profile</button>
+    <a href="{{ url_for('counsellor_dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+</form>
+{% endblock %}
