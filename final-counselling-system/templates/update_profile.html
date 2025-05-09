@@ -1,0 +1,42 @@
+<!-- templates/update_profile.html -->
+{% extends "base.html" %}
+{% block title %}Update Profile{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4">Update Your Profile</h2>
+  <form method="POST" action="{{ url_for('update_profile') }}">
+    <div class="mb-3">
+      <label>Gender</label>
+      <select name="gender" class="form-control">
+        <option value="">-- Select --</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label>Counselling Type</label>
+      <input type="text" name="counselling_type" class="form-control">
+    </div>
+
+    <div class="mb-3">
+      <label>Bio</label>
+      <textarea name="bio" class="form-control" rows="3"></textarea>
+    </div>
+
+    <div class="mb-3">
+      <label>Caste</label>
+      <input type="text" name="caste" class="form-control">
+    </div>
+
+    <div class="mb-3">
+      <label>Aadhaar Number</label>
+      <input type="text" name="aadhaar" class="form-control">
+    </div>
+
+    <button type="submit" class="btn btn-success">Update Profile</button>
+  </form>
+</div>
+{% endblock %}

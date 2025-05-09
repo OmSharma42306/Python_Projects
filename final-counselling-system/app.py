@@ -80,18 +80,18 @@ CREATE TABLE IF NOT EXISTS bookings (
     # if 'experience' not in columns:
     #     cursor.execute("ALTER TABLE counsellors ADD COLUMN experience TEXT")
 
-    if 'gender' not in columns:
-        cursor.execute("ALTER TABLE users ADD COLUMN gender TEXT")
-    if 'counselling_type' not in columns:
-        cursor.execute("ALTER TABLE users ADD COLUMN counselling_type TEXT")
-    if 'bio' not in columns:
-        cursor.execute("ALTER TABLE users ADD COLUMN bio TEXT")
-    if 'caste' not in columns:
-        cursor.execute("ALTER TABLE users ADD COLUMN caste TEXT")
-    if 'aadhaar' not in columns:
-        cursor.execute("ALTER TABLE users ADD COLUMN aadhaar TEXT")
-
-
+    # if 'gender' not in columns:
+    #     cursor.execute("ALTER TABLE users ADD COLUMN gender TEXT")
+    # if 'counselling_type' not in columns:
+    #     cursor.execute("ALTER TABLE users ADD COLUMN counselling_type TEXT")
+    # if 'bio' not in columns:
+    #     cursor.execute("ALTER TABLE users ADD COLUMN bio TEXT")
+    # if 'caste' not in columns:
+    #     cursor.execute("ALTER TABLE users ADD COLUMN caste TEXT")
+    # if 'aadhaar' not in columns:
+    #     cursor.execute("ALTER TABLE users ADD COLUMN aadhaar TEXT")
+    # cursor.execute("ALTER TABLE users ADD COLUMN gender TEXT")
+    #cursor.execute("ALTER TABLE users ADD COLUMN bio TEXT")
     conn.commit()
     conn.close()
 
