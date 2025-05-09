@@ -139,16 +139,16 @@ def student_profile():
         counselling_type = request.form['counselling_type']
         bio = request.form['bio']
         caste = request.form['caste']
-        aadhar = request.form['aadhar']
+        aadhaar = request.form['aadhaar']
 
         cursor.execute('''
             UPDATE users
-            SET gender = ?, counselling_type = ?, bio = ?, caste = ?, aadhar = ?
+            SET gender = ?, counselling_type = ?, bio = ?, caste = ?, aadhaar = ?
             WHERE email = ?
-        ''', (gender, counselling_type, bio, caste, aadhar, session['user_email']))
+        ''', (gender, counselling_type, bio, caste, aadhaar, session['user_email']))
         conn.commit()
 
-    cursor.execute('SELECT name, email, phone, gender, counselling_type, bio, caste, aadhar FROM users WHERE email = ?', (session['user_email'],))
+    cursor.execute('SELECT name, email, phone, gender, counselling_type, bio, caste, aadhaar FROM users WHERE email = ?', (session['user_email'],))
     user = cursor.fetchone()
     conn.close()
 
