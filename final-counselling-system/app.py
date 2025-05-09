@@ -126,6 +126,34 @@ def send_email(to_email, subject, body):
         print("Email failed:", e)
 
 
+@app.route('/student_profile', methods=['GET', 'POST'])
+def student_profile():
+    if 'user_email' not in session:
+        return redirect(url_for('user_login'))
+
+    conn = sqlite3.connect('counsellors.db')
+    cursor = conn.cursor()
+
+    if request.method == 'POST':
+        gender = request.form['gender']
+        counselling_type = request.form['counselling_type']
+        bio = request.form['bio']
+        caste = request.form['caste']
+        aadhar = request.form['aadhar']
+
+        cursor.execute('''
+            UPDATE users
+            SET gender = ?, counselling_type = ?, bio = ?, caste = ?, aadhar = ?
+            WHERE email = ?
+        ''', (gender, counselling_type, bio, caste, aadhar, session['user_email']))
+        conn.commit()
+
+    cursor.execute('SELECT name, email, phone, gender, counselling_type, bio, caste, aadhar FROM users WHERE email = ?', (session['user_email'],))
+    user = cursor.fetchone()
+    conn.close()
+
+    return render_template('student_profile.html', user=user)
+
 
 @app.route('/admin_login', methods=['GET', 'POST'])
 def admin_login():
