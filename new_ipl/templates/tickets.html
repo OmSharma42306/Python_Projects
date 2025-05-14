@@ -724,42 +724,13 @@ document.getElementById("confirm-booking").addEventListener("click", function ()
 });
 
 
-
-// Download ticket functionality
-// document.getElementById("download-ticket").addEventListener("click", function() {
-//     document.getElementById("info").style.display = "none";
-//     const { jsPDF } = window.jspdf; // Access jsPDF from the window object
-//     const doc = new jsPDF();
-
-//     const name = document.getElementById("ticket-name").innerText;
-//     const matchInfo = document.getElementById("ticket-match").innerText;
-//     const venue = document.getElementById("ticket-venue").innerText;
-//     const price = document.getElementById("ticket-price").innerText;
-
-//     // Add content to the PDF
-//     doc.setFontSize(20);
-//     doc.text("Your Ticket", 20, 20);
-//     doc.setFontSize(12);
-//     doc.text(`Name: ${name}`, 20, 40);
-//     doc.text(`Match: ${matchInfo}`, 20, 50);
-//     doc.text(`Venue: ${venue}`, 20, 60);
-//     doc.text(`Price: ${price}`, 20, 70);
-
-//     // Save the PDF
-//     doc.save("ticket.pdf");
-
-//     window.location.href = '/getticket'
-
-// });
-
-
 document.getElementById("download-ticket").addEventListener("click", function () {
     document.getElementById("info").style.display = "none";
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({
         orientation: "landscape",
         unit: "mm",
-        format: [160, 60]  // Custom size to match backend
+        format: [160, 60]  
     });
 
     const name = document.getElementById("ticket-name").innerText;
@@ -772,12 +743,12 @@ document.getElementById("download-ticket").addEventListener("click", function ()
     doc.setDrawColor(0, 0, 139); // Dark blue
     doc.rect(5, 5, 150, 50);
 
-    // Title
+    
     doc.setFont("helvetica", "bold");
     doc.setFontSize(16);
     doc.text("MATCH TICKET", 80, 15, { align: "center" });
 
-    // Left side info
+    
     doc.setFont("helvetica", "normal");
     doc.setFontSize(11);
     doc.text(`Name: ${name}`, 15, 25);
@@ -785,15 +756,15 @@ document.getElementById("download-ticket").addEventListener("click", function ()
     doc.text(`Venue: ${venue}`, 15, 41);
     doc.text(`Price: ₹${price}`, 15, 49); // Use ₹ symbol
 
-    // Footer message
+    
     doc.setFont("helvetica", "italic");
     doc.setFontSize(8);
     doc.text("Thank you for booking with us!", 80, 57, { align: "center" });
 
-    // Save the PDF
+    
     doc.save("ticket.pdf");
 
-    window.location.href = '/getticket';  // Triggers backend email
+    window.location.href = '/getticket';  
 });
 
 

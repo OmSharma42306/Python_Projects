@@ -8,20 +8,48 @@
   {% if error %}
   <div class="alert alert-danger">{{ error }}</div>
   {% endif %}
-  <form method="post" action="/user_login">
+  <form method="post" action="/user_login" onsubmit="return validateForm()">
     <div class="mb-3">
       <label class="form-label" style="color: white;">Username</label>
-      <input type="text" class="form-control" name="email" required>
+      <input type="text" class="form-control" name="email" id="email" required>
+      <small id="emailError" class="text-danger"></small>
     </div>
     <div class="mb-3">
       <label class="form-label" style="color: white;">Password</label>
-      <input type="password" class="form-control" name="password" required>
+      <input type="password" class="form-control" name="password" id="password" required>
+      <small id="passwordError" class="text-danger"></small>
     </div>
     <button type="submit" class="btn btn-primary">Login</button>
   </form>
   <br>
   
-  <a  href="{{ url_for('signup') }}">SignUp</a>
+  <a href="{{ url_for('signup') }}">SignUp</a>
 </div>
+
+<script>
+function validateForm() {
+  let valid = true;
+
+  // Clear previous error messages
+  document.getElementById("emailError").textContent = "";
+  document.getElementById("passwordError").textContent = "";
+
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+
+  if (!emailPattern.test(email)) {
+    document.getElementById("emailError").textContent = "Please enter a valid email address.";
+    valid = false;
+  }
+
+  if (password.length < 6) {
+    document.getElementById("passwordError").textContent = "Password must be at least 6 characters.";
+    valid = false;
+  }
+
+  return valid;
+}
+</script>
 
 {% endblock %}

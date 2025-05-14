@@ -8,16 +8,44 @@
   {% if error %}
   <div class="alert alert-danger">{{ error }}</div>
   {% endif %}
-  <form method="post">
+  <form method="post" onsubmit="return validateAdminForm()">
     <div class="mb-3">
       <label class="form-label" style="color: white;">Username</label>
-      <input type="text" class="form-control" name="username" required>
+      <input type="text" class="form-control" name="username" id="username" required>
+      <small id="usernameError" class="text-danger"></small>
     </div>
     <div class="mb-3">
       <label class="form-label" style="color: white;">Password</label>
-      <input type="password" class="form-control" name="password" required>
+      <input type="password" class="form-control" name="password" id="password" required>
+      <small id="passwordError" class="text-danger"></small>
     </div>
     <button type="submit" class="btn btn-primary">Login</button>
   </form>
 </div>
+
+<script>
+function validateAdminForm() {
+  let valid = true;
+
+  // Clear previous errors
+  document.getElementById("usernameError").textContent = "";
+  document.getElementById("passwordError").textContent = "";
+
+  const email = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+
+  if (!emailPattern.test(email)) {
+    document.getElementById("usernameError").textContent = "Enter a valid email address.";
+    valid = false;
+  }
+
+  if (password.length < 1) {
+    document.getElementById("passwordError").textContent = "Password must be at least 6 characters.";
+    valid = false;
+  }
+
+  return valid;
+}
+</script>
 {% endblock %}

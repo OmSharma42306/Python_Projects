@@ -8,27 +8,74 @@
   {% if error %}
   <div class="alert alert-danger">{{ error }}</div>
   {% endif %}
-  <form method="POST" action="/signup">
+  <form method="POST" action="/signup" onsubmit="return validateSignupForm()">
     <div class="mb-3">
-        <label class="form-label"style="color: white;">Name</label>
-        <input type="text" class="form-control" placeholder="Name" name="name" required>
-      </div>
-
-
-    <div class="mb-3">
-      <label class="form-label"style="color: white;">Username</label>
-      <input type="text" class="form-control" name="email" required>
+      <label class="form-label" style="color: white;">Name</label>
+      <input type="text" class="form-control" placeholder="Name" name="name" id="name" required>
+      <small id="nameError" class="text-danger"></small>
     </div>
+
     <div class="mb-3">
-        <label class="form-label"style="color: white;">Phone</label>
-        <input type="text" class="form-control" name="phone" required>
-      </div>
-    <div class="mb-3">
-      <label class="form-label"style="color: white;">Password</label>
-      <input type="password" class="form-control" name="password" required>
+      <label class="form-label" style="color: white;">Username</label>
+      <input type="text" class="form-control" name="email" id="email" required>
+      <small id="emailError" class="text-danger"></small>
     </div>
-    
+
+    <div class="mb-3">
+      <label class="form-label" style="color: white;">Phone</label>
+      <input type="text" class="form-control" name="phone" id="phone" required>
+      <small id="phoneError" class="text-danger"></small>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label" style="color: white;">Password</label>
+      <input type="password" class="form-control" name="password" id="password" required>
+      <small id="passwordError" class="text-danger"></small>
+    </div>
+
     <button type="submit" class="btn btn-primary">SignUp</button>
   </form>
 </div>
+
+<script>
+function validateSignupForm() {
+  let valid = true;
+
+  // Clear previous error messages
+  document.getElementById("nameError").textContent = "";
+  document.getElementById("emailError").textContent = "";
+  document.getElementById("phoneError").textContent = "";
+  document.getElementById("passwordError").textContent = "";
+
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+  const phonePattern = /^[0-9]{10}$/;
+
+  if (name.length < 2) {
+    document.getElementById("nameError").textContent = "Name must be at least 2 characters.";
+    valid = false;
+  }
+
+  if (!emailPattern.test(email)) {
+    document.getElementById("emailError").textContent = "Please enter a valid email address.";
+    valid = false;
+  }
+
+  if (!phonePattern.test(phone)) {
+    document.getElementById("phoneError").textContent = "Enter a valid 10-digit phone number.";
+    valid = false;
+  }
+
+  if (password.length < 6) {
+    document.getElementById("passwordError").textContent = "Password must be at least 6 characters.";
+    valid = false;
+  }
+
+  return valid;
+}
+</script>
 {% endblock %}
