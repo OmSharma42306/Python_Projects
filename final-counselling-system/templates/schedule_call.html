@@ -5,14 +5,36 @@
     <form method="post">
         <div class="mb-3">
             <label>Date</label>
-            <input type="date" name="date" class="form-control" required>
+            <input type="date" id="date" name="date" class="form-control" required>
         </div>
         <div class="mb-3">
             <label>Time</label>
-            <input type="time" name="time" class="form-control" required>
+            <input type="time" id="time" name="time" class="form-control" required>
         </div>
         <button type="submit" class="btn btn-primary">Schedule Call</button>
         <a href="{{ url_for('counsellor_dashboard') }}" class="btn btn-secondary">Cancel</a>
     </form>
 </div>
+
+<script>
+    const dateInput = document.getElementById('date');
+    const timeInput = document.getElementById('time');
+
+    const now = new Date();
+    const todayStr = now.toISOString().split('T')[0];
+
+    
+    dateInput.setAttribute('min', todayStr);
+
+    
+    dateInput.addEventListener('change', function () {
+        if (dateInput.value === todayStr) {
+            const currentHours = now.getHours().toString().padStart(2, '0');
+            const currentMinutes = now.getMinutes().toString().padStart(2, '0');
+            timeInput.min = `${currentHours}:${currentMinutes}`;
+        } else {
+            timeInput.removeAttribute('min');
+        }
+    });
+</script>
 {% endblock %}

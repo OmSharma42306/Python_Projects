@@ -92,6 +92,8 @@ CREATE TABLE IF NOT EXISTS bookings (
     #     cursor.execute("ALTER TABLE users ADD COLUMN aadhaar TEXT")
     # cursor.execute("ALTER TABLE users ADD COLUMN gender TEXT")
     #cursor.execute("ALTER TABLE users ADD COLUMN bio TEXT")
+
+    
     conn.commit()
     conn.close()
 
