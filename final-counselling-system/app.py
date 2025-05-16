@@ -316,6 +316,40 @@ def student_dashboard():
         #return render_template('student_dashboard.html')
     return render_template('student_dashboard.html')
 
+# @app.route('/student_dashboard')
+# def student_dashboard():
+#     if 'user_email' not in session:
+#         return redirect(url_for('user_login'))
+
+#     conn = sqlite3.connect('counsellors.db')
+#     cursor = conn.cursor()
+
+#     # Get student_id
+#     cursor.execute('SELECT id FROM users WHERE email = ?', (session['user_email'],))
+#     student = cursor.fetchone()
+#     student_id = student[0]
+
+#     # Get latest scheduled call time
+#     cursor.execute('''
+#         SELECT scheduled_time FROM bookings
+#         WHERE student_id = ? AND scheduled_time IS NOT NULL
+#         ORDER BY scheduled_time DESC
+#         LIMIT 1
+#     ''', (student_id,))
+#     row = cursor.fetchone()
+#     conn.close()
+
+#     show_message_button = False
+#     if row:
+#         from datetime import datetime, timedelta
+#         scheduled_time = datetime.strptime(row[0], '%Y-%m-%d %H:%M')
+#         now = datetime.now()
+#         if scheduled_time <= now <= scheduled_time + timedelta(hours=24):
+#             show_message_button = True
+
+#     return render_template('student_dashboard.html', show_message_button=show_message_button)
+
+
 
 
 
@@ -341,17 +375,81 @@ def counsellor_login():
     return render_template('counsellor_login.html')
     # return render_template('counsellor_login.html')
 
+# @app.route('/select_counsellor')
+# def select_counsellor():
+#     conn = sqlite3.connect('counsellors.db')
+#     cursor = conn.cursor()
+#     cursor.execute('SELECT id, name, email,specialization,bio,gender,experience FROM counsellors')
+
+#     counsellors = cursor.fetchall()
+#     print(counsellors)
+    
+    
+
+#     cursor = conn.cursor()
+
+#     # Get student_id
+#     cursor.execute('SELECT id FROM users WHERE email = ?', (session['user_email'],))
+#     student = cursor.fetchone()
+#     student_id = student[0]
+
+#     # Get latest scheduled call time
+#     cursor.execute('''
+#         SELECT scheduled_time FROM bookings
+#         WHERE student_id = ? AND scheduled_time IS NOT NULL
+#         ORDER BY scheduled_time DESC
+#         LIMIT 1
+#     ''', (student_id,))
+#     row = cursor.fetchone()
+#     conn.close()
+
+#     show_message_button = False
+#     if row:
+#         from datetime import datetime, timedelta
+#         scheduled_time = datetime.strptime(row[0], '%Y-%m-%d %H:%M')
+#         now = datetime.now()
+#         if scheduled_time <= now <= scheduled_time + timedelta(hours=24):
+#             show_message_button = True
+#     print("SHHHHHH",show_message_button)
+#     return render_template('select_counsellor.html', counsellors=counsellors, show_message_button=show_message_button)
+
+
 @app.route('/select_counsellor')
 def select_counsellor():
     conn = sqlite3.connect('counsellors.db')
     cursor = conn.cursor()
-    cursor.execute('SELECT id, name, email,specialization,bio,gender,experience FROM counsellors')
 
+    # Get all counsellors
+    cursor.execute('SELECT id, name, email, specialization, bio, gender, experience FROM counsellors')
     counsellors = cursor.fetchall()
-    print(counsellors)
-    conn.close()
-    return render_template('select_counsellor.html', counsellors=counsellors)
 
+    # Get student_id
+    cursor.execute('SELECT id FROM users WHERE email = ?', (session['user_email'],))
+    student = cursor.fetchone()
+    student_id = student[0]
+
+    # Get current datetime
+    from datetime import datetime, timedelta
+    now = datetime.now()
+
+    # Get all counsellor_ids with a valid session in the past 24 hours
+    cursor.execute('''
+        SELECT counsellor_id, scheduled_time FROM bookings
+        WHERE student_id = ? AND scheduled_time IS NOT NULL
+    ''', (student_id,))
+    bookings = cursor.fetchall()
+
+    active_counsellor_ids = set()
+    for counsellor_id, scheduled_time in bookings:
+        session_time = datetime.strptime(scheduled_time, '%Y-%m-%d %H:%M')
+        if session_time <= now <= session_time + timedelta(hours=24):
+            active_counsellor_ids.add(counsellor_id)
+
+    conn.close()
+
+    return render_template('select_counsellor.html',
+                           counsellors=counsellors,
+                           active_counsellor_ids=active_counsellor_ids)
 
 
 @app.route('/schedule_call/<int:booking_id>', methods=['GET', 'POST'])
