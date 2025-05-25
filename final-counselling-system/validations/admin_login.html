@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Login{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2 style="color: gold;">Admin Login</h2>
+  {% if error %}
+  <div class="alert alert-danger">{{ error }}</div>
+  {% endif %}
+  <form method="post" onsubmit="return validateAdminLoginForm()">
+    <div class="mb-3">
+      <label class="form-label" style="color: black;">Username</label>
+      <input type="text" class="form-control" name="username" id="username" required>
+      <small id="usernameError" class="text-danger"></small>
+    </div>
+    <div class="mb-3">
+      <label class="form-label" style="color: black;">Password</label>
+      <input type="password" class="form-control" name="password" id="password" required>
+      <small id="passwordError" class="text-danger"></small>
+    </div>
+    <button type="submit" class="btn btn-primary">Login</button>
+  </form>
+</div>
+
+<script>
+function validateAdminLoginForm() {
+  let valid = true;
+
+  document.getElementById("usernameError").textContent = "";
+  document.getElementById("passwordError").textContent = "";
+
+  const email = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+
+  if (!emailPattern.test(email)) {
+    document.getElementById("usernameError").textContent = "Please enter a valid email address.";
+    valid = false;
+  }
+
+  if (password.length < 6) {
+    document.getElementById("passwordError").textContent = "Password must be at least 6 characters.";
+    valid = false;
+  }
+
+  return valid;
+}
+</script>
+{% endblock %}
